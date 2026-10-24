@@ -1,0 +1,79 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "127.0.0.1",
+    "jwtSecret": "",
+    "accessTtlSec": 900,
+    "refreshTtlSec": 604800,
+    "corsOrigins": [
+      "http://127.0.0.1:3000",
+      "http://localhost:3000"
+    ]
+  },
+  "paths": {
+    "dataDir": "backend/data",
+    "dbPath": "backend/data/NoldOJ.db",
+    "sandboxDir": "tmp/sandbox",
+    "uploadDir": "backend/data/uploads",
+    "testdataDir": "backend/data/testdata",
+    "workDir": "tmp/work"
+  },
+  "security": {
+    "captchaEnabled": false,
+    "registrationEnabled": true,
+    "registrationPerIpPerHour": 1,
+    "sourceMaxBytes": 131072,
+    "submitRateLimit": {
+      "windowSec": 60,
+      "max": 10
+    },
+    "ideRateLimit": {
+      "windowSec": 60,
+      "max": 15
+    },
+    "loginRateLimit": {
+      "windowSec": 60,
+      "max": 8
+    }
+  },
+  "judge": {
+    "queueConcurrency": 2,
+    "defaultTimeLimitMs": 2000,
+    "defaultMemoryLimitMb": 256,
+    "defaultOutputLimitKb": 65536,
+    "defaultStackLimitMb": 64,
+    "compileTimeoutMs": 30000
+  },
+  "ai": {
+    "reviewEnabled": false,
+    "hintEnabled": true,
+    "testdataEnabled": false,
+    "baseUrl": "http://127.0.0.1:11434",
+    "model": "qwen3:1.7b",
+    "apiKey": "",
+    "timeoutMs": 60000,
+    "hintCooldownSec": 60,
+    "hintFailThreshold": 2
+  },
+  "email": {
+    "enabled": false,
+    "host": "",
+    "port": 465,
+    "user": "",
+    "pass": "",
+    "from": ""
+  },
+  "files": {
+    "maxSingleFileMb": 10,
+    "defaultUserQuotaMb": 2048
+  },
+  "contest": {
+    "freezeDefaultMinutes": 0
+  },
+  "plagiarism": {
+    "enabled": true,
+    "highSimilarity": 0.85,
+    "suspectSimilarity": 0.7,
+    "minCodeLength": 200
+  }
+}

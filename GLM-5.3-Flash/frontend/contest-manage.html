@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>比赛管理 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2 id="head">创建比赛</h2>
+    <label>标题</label><input id="f-title">
+    <div class="form-row mt">
+      <div><label>开始时间</label><input id="f-start" type="datetime-local"></div>
+      <div><label>结束时间</label><input id="f-end" type="datetime-local"></div>
+      <div><label>榜单冻结（分钟，结束前 N 分钟不再更新名次；0 不冻结）</label><input id="f-freeze" value="0"></div>
+    </div>
+    <label>需要邀请码（除管理员/教师外需凭码报名）</label><input id="f-invite" placeholder="留空 = 公开报名">
+    <label class="mt">赛制说明（Markdown，支持 [[bili:BVID:p]] 视频挂载）</label>
+    <textarea id="f-desc" style="min-height:120px"></textarea>
+    <div class="mt"><button class="btn" id="save">保存比赛</button></div>
+    <div id="msg"></div>
+  </div>
+  <div class="card hidden" id="after">
+    <h3>赛题配置 <span class="muted" id="c-state"></span></h3>
+    <div class="flex">
+      <select id="p-select" style="flex:1"></select>
+      <input id="p-alias" placeholder="显示字母（可空）" style="width:120px">
+      <input id="p-score" placeholder="分值" style="width:80px">
+      <button class="btn small" id="p-add">添加赛题</button>
+    </div>
+    <table class="data mt"><thead><tr><th>#</th><th>题目</th><th>分值</th><th>操作</th></tr></thead><tbody id="cp-body"></tbody></table>
+    <div class="mt">
+      <button class="btn" id="invite-gen">生成邀请码</button>
+      <a class="btn secondary" id="plag-btn" href="#">一键查重</a>
+    </div>
+    <div id="invite-out" class="mt"></div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+if (!NoldOJ.user() || !['teacher','admin','super'].includes(NoldOJ.user().role)) location.href = '/';
+const CID = Number(NoldOJ.qs('id')) || 0;
+const localDT = d => { const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000); return x.toISOString().slice(0, 16); };
+
+(async function () {
+  const pr = await NoldOJ.api('/problems?showAll=1&pageSize=200');
+  if (pr.ok) document.getElementById('p-select').innerHTML = pr.data.items.map(p => '<option value="' + p.id + '">' + p.id + '. ' + NoldOJ.escapeHtml(p.title) + '</option>').join('');
+  if (CID) {
+    document.getElementById('head').textContent = '编排比赛 #' + CID;
+    const r = await NoldOJ.api('/contests/' + CID);
+    if (r.ok) {
+      const c = r.data.contest;
+      document.getElementById('f-title').value = c.title;
+      document.getElementById('f-start').value = localDT(new Date(c.start_time));
+      document.getElementById('f-end').value = localDT(new Date(c.end_time));
+      document.getElementById('f-freeze').value = c.freeze_minutes;
+      document.getElementById('f-invite').value = c.invite_required || '';
+      document.getElementById('f-desc').value = c.description_md || '';
+      loadProblems(c.problems);
+    }
+    document.getElementById('save').textContent = '保存修改';
+    document.getElementById('after').classList.remove('hidden');
+  } else {
+    const curl = new Date();
+    document.getElementById('f-start').value = localDT(new Date(curl.getTime() + 3600e3));
+    document.getElementById('f-end').value = localDT(new Date(curl.getTime() + 7200e3));
+  }
+})();
+
+function loadProblems(list) {
+  document.getElementById('cp-body').innerHTML = list.map((p, i) =>
+    '<tr><td>' + String.fromCharCode(65 + i) + '</td><td>' + p.id + '. ' + NoldOJ.escapeHtml(p.title) + '</td><td>' + p.score + '</td>' +
+    '<td><button class="btn small danger" data-rm="' + p.id + '">移除</button></td></tr>').join('');
+  document.querySelectorAll('#cp-body button').forEach(b => b.onclick = async () => {
+    await NoldOJ.api('/contests/' + CID + '/problems/' + b.dataset.rm, { method: 'DELETE' });
+    const c = await NoldOJ.api('/contests/' + CID);
+    if (c.ok) loadProblems(c.data.contest.problems);
+  });
+}
+
+document.getElementById('save').onclick = async () => {
+  const body = {
+    title: document.getElementById('f-title').value,
+    startTime: new Date(document.getElementById('f-start').value).getTime(),
+    endTime: new Date(document.getElementById('f-end').value).getTime(),
+    freezeMinutes: Number(document.getElementById('f-freeze').value),
+    inviteRequired: document.getElementById('f-invite').value,
+    descriptionMd: document.getElementById('f-desc').value
+  };
+  if (!body.title || !body.startTime || !body.endTime || body.endTime <= body.startTime) {
+    document.getElementById('msg').innerHTML = '<div class="notice error">请填写标题且结束时间需晚于开始时间</div>'; return;
+  }
+  const r = CID ? await NoldOJ.api('/contests/' + CID, { method: 'PUT', body })
+    : await NoldOJ.api('/contests', { method: 'POST', body });
+  if (r.ok) {
+    document.getElementById('msg').innerHTML = '<div class="notice info">已保存</div>';
+    if (!CID) { location.href = '/contest-manage.html?id=' + r.data.id; return; }
+    document.getElementById('after').classList.remove('hidden');
+    const c = await NoldOJ.api('/contests/' + CID);
+    if (c.ok) { document.getElementById('c-state').textContent = c.data.state === 'running' ? '（进行中）' : c.data.state === 'notstarted' ? '（未开始）' : '（已结束）'; loadProblems(c.data.problems); }
+  } else document.getElementById('msg').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>';
+};
+
+document.getElementById('p-add').onclick = async () => {
+  if (!CID) { alert('请先保存比赛'); return; }
+  const r = await NoldOJ.api('/contests/' + CID + '/problems', {
+    method: 'POST',
+    body: { problemId: Number(document.getElementById('p-select').value), alias: document.getElementById('p-alias').value, score: Number(document.getElementById('p-score').value || 100) }
+  });
+  if (r.ok) {
+    document.getElementById('p-alias').value = ''; document.getElementById('p-score').value = '';
+    const c = await NoldOJ.api('/contests/' + CID);
+    if (c.ok) loadProblems(c.data.contest.problems);
+  } else alert(r.error);
+};
+
+document.getElementById('invite-gen').onclick = async () => {
+  if (!CID) { alert('请先保存比赛'); return; }
+  const r = await NoldOJ.api('/contests/' + CID + '/invite', { method: 'POST' });
+  if (r.ok) {
+    const u = r.data.invites.map(i => NoldOJ.escapeHtml(i.code)).join('　');
+    document.getElementById('invite-out').innerHTML = '<div class="notice info">邀请码（用户在比赛页输入报名）：<strong>' + u + '</strong></div>';
+  } else alert(r.error);
+};
+document.getElementById('plag-btn').onclick = async e => {
+  e.preventDefault();
+  if (!CID) { alert('请先保存比赛'); return; }
+  const r = await NoldOJ.api('/plagiarism/start', { method: 'POST', body: { contestId: CID } });
+  if (r.ok) location.href = '/plagiarism.html?id=' + r.data.reportId; else alert(r.error);
+};
+</script>
+</body>
+</html>

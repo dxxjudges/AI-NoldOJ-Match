@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>在线 IDE - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="split">
+    <div class="card">
+      <div class="flex spread">
+        <h2 style="margin:0">在线 IDE</h2>
+        <span class="muted" id="stage"></span>
+      </div>
+      <label>语言</label>
+      <select id="lang"></select>
+      <label>标准输入 stdin</label>
+      <textarea id="stdin" placeholder="程序运行前的标准输入（可留空）" style="min-height:100px"></textarea>
+      <label>代码</label>
+      <textarea id="code" class="mono" style="min-height:360px;font-size:13px" spellcheck="false"></textarea>
+      <button class="btn mt" id="run-btn" style="width:100%">▶ 运行（Ctrl+Enter）</button>
+    </div>
+    <div class="card">
+      <h3>运行结果</h3>
+      <div id="result">
+        <div class="muted">登录后即可使用在线 IDE。支持三阶段状态显示（审核中→编译中→运行中）、退出码、耗时与内存峰值。</div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+if (!NoldOJ.user()) { location.href = '/login.html'; }
+
+const DEFAULT_CODE = {
+  '1': '#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello NoldOJ" << endl;\n    return 0;\n}\n',
+  '2': '#include <stdio.h>\nint main() {\n    printf("Hello NoldOJ\\n");\n    return 0;\n}\n',
+  '3': 'print("Hello NoldOJ")\n',
+  '4': 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello NoldOJ");\n    }\n}\n',
+  '5': 'console.log("Hello NoldOJ");\n'
+};
+
+(async function () {
+  const r = await NoldOJ.api('/languages');
+  if (r.ok) {
+    const sel = document.getElementById('lang');
+    sel.innerHTML = r.data.items.filter(l => l.enabled).map(l =>
+      '<option value="' + l.id + '"' + ((NoldOJ.user().preferredLang == l.id) ? ' selected' : '') + '>' + NoldOJ.escapeHtml(l.name) + '</option>').join('');
+    if (!document.getElementById('code').value) {
+      document.getElementById('code').value = DEFAULT_CODE[sel.value] || '';
+    }
+    sel.onchange = () => { document.getElementById('code').value = DEFAULT_CODE[sel.value] || ''; runId = null; paint(idle()); };
+  }
+})();
+
+let runId = null;
+const STAGES = { pending: '审核中', compiling: '编译中', running: '运行中', done: '完成' };
+function idle() { return { stage: 'done', result: { exitCode: '-', timeMs: 0, memoryKb: 0, stdout: '', stderr: '' } }; }
+function paint(r) {
+  document.getElementById('stage').textContent = STAGES[r.stage] || '';
+  const res = r.result || { exitCode: '...', timeMs: 0, memoryKb: 0, stdout: '', stderr: '' };
+  document.getElementById('result').innerHTML =
+    '<div class="flex mb"><div class="stat-box" style="flex:1"><div class="n">' + res.exitCode + '</div><div class="t">退出码</div></div>' +
+    '<div class="stat-box" style="flex:1"><div class="n">' + res.timeMs + 'ms</div><div class="t">耗时</div></div>' +
+    '<div class="stat-box" style="flex:1"><div class="n">' + NoldOJ.fmtMem(res.memoryKb) + '</div><div class="t">峰值内存</div></div></div>' +
+    (r.stage !== 'done' ? '<div class="notice info">' + STAGES[r.stage] + '...</div>' : '') +
+    '<h4>标准输出</h4><pre style="min-height:80px">' + NoldOJ.escapeHtml(res.stdout || '') + '</pre>' +
+    (res.stderr ? '<h4>错误输出</h4><pre style="color:var(--red)">' + NoldOJ.escapeHtml(res.stderr) + '</pre>' : '');
+}
+
+NoldOJ.onIdeUpdate(p => { if (p.runId === runId && p.stage) { paint({ stage: p.stage, result: p.result }); if (p.stage === 'done') document.getElementById('run-btn').disabled = false; } });
+
+document.getElementById('run-btn').onclick = async function () {
+  this.disabled = true; this.textContent = '运行中...';
+  const r = await NoldOJ.api('/ide/run', {
+    method: 'POST',
+    body: { languageId: Number(document.getElementById('lang').value), code: document.getElementById('code').value, input: document.getElementById('stdin').value }
+  });
+  if (r.ok) {
+    runId = r.data.runId;
+    paint({ stage: 'pending', result: { exitCode: '...', timeMs: 0, memoryKb: 0 } });
+    // also poll as fallback
+    const poll = setInterval(async () => {
+      if (!runId) { clearInterval(poll); return; }
+      const s = await NoldOJ.api('/ide/run/' + runId);
+      if (s.ok && s.data.stage === 'done') { clearInterval(poll); paint(s.data); this.disabled = false; this.textContent = '▶ 运行（Ctrl+Enter）'; }
+    }, 1000);
+    setTimeout(() => clearInterval(poll), 60000);
+  } else {
+    this.disabled = false; this.textContent = '▶ 运行（Ctrl+Enter）';
+    alert(r.error);
+  }
+};
+document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') document.getElementById('run-btn').click(); });
+</script>
+</body>
+</html>

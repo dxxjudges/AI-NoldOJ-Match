@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>个人主页 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <div class="flex spread">
+      <div class="flex">
+        <h2 style="margin:0" id="u-name">...</h2>
+        <span class="tag-pill" id="u-role"></span>
+        <span class="rating-chip" id="u-rating"></span>
+      </div>
+      <button class="btn small secondary hidden" id="edit-btn">编辑资料</button>
+    </div>
+    <div class="muted" id="u-sig"></div>
+    <div id="u-bio" class="mt"></div>
+    <div class="flex mt muted" id="u-privacy"></div>
+  </div>
+  <div id="dash-wrap">
+    <div class="card">
+      <h3>提交热力图（近 365 天）</h3>
+      <div id="calendar"></div>
+      <div class="split mt">
+        <div><h4>语言分布</h4><div id="chart-lang" style="height:280px"></div></div>
+        <div><h4>AC 难度分布</h4><div id="chart-diff" style="height:280px"></div></div>
+      </div>
+    </div>
+  </div>
+  <div id="ach-wrap" class="card">
+    <h3>成就</h3>
+    <div id="ach-list"></div>
+  </div>
+  <div id="fav-wrap" class="card">
+    <h3>题目收藏</h3>
+    <div id="fav-list" class="muted"></div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const UID = Number(NoldOJ.qs('id')) || (NoldOJ.user() ? NoldOJ.user().id : 1);
+const COLORS = ['#22a05a','#5b9bff','#f0a020','#e05a5a','#b050d0','#333'];
+(async function () {
+  const r = await NoldOJ.api('/users/' + UID);
+  if (!r.ok) { document.body.querySelector('main').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>'; return; }
+  const u = r.data;
+  document.title = u.username + ' 的主页 - NoldOJ';
+  document.getElementById('u-name').textContent = u.username;
+  document.getElementById('u-role').textContent = NoldOJ.ROLE_NAME[u.role] || u.role;
+  document.getElementById('u-rating').textContent = 'Rating ' + u.rating;
+  document.getElementById('u-sig').textContent = u.signature || '';
+  NoldOJ.renderMd(document.getElementById('u-bio'), u.bio || '');
+  const flags = u.privacyFlags || {};
+  document.getElementById('u-privacy').innerHTML = ['achievements','dashboard','favorites'].map(k => {
+    const hidden = !flags[k];
+    const name = { achievements: '成就', dashboard: '数据面板', favorites: '收藏' }[k];
+    return '<span style="' + (hidden ? 'opacity:.4' : '') + '">' + name + (hidden ? '（未公开）' : '') + '</span>';
+  }).join(' · ');
+  if (NoldOJ.user() && NoldOJ.user().id === u.id) {
+    document.getElementById('edit-btn').classList.remove('hidden');
+    document.getElementById('edit-btn').onclick = () => {
+      const sig = prompt('个人签名：', u.signature || '');
+      if (sig === null) return;
+      const bio = prompt('个人简介（Markdown）：', u.bio || '');
+      if (bio === null) return;
+      NoldOJ.api('/users/me', { method: 'PUT', body: { signature: sig, bio } }).then(() => location.reload());
+    };
+  }
+  // dashboard
+  if (u.dashboard && document.getElementById('dash-wrap')) {
+    renderCalendar(u.dashboard.calendar || []);
+    renderPie('chart-lang', u.dashboard.langDist, '语言');
+    const diffMap = u.dashboard.acDifficultyDist || {};
+    document.getElementById('chart-diff').innerHTML = '';
+    renderPie('chart-diff', diffMap, '难度');
+  } else if (document.getElementById('dash-wrap')) {
+    document.getElementById('dash-wrap').innerHTML = '<div class="card"><h3>个人数据面板</h3><div class="muted">该用户隐藏了数据面板</div></div>';
+  }
+  // achievements
+  const ar = await NoldOJ.api('/users/' + UID + '/achievements');
+  document.getElementById('ach-list').innerHTML = ar.ok ? ar.data.items.map(a =>
+    '<div class="mb" style="opacity:' + (a.unlocked ? 1 : .35) + '"><strong>' + (a.unlocked ? '🏆' : '🔒') + ' ' + NoldOJ.escapeHtml(a.name) + '</strong> <span class="muted">' + NoldOJ.escapeHtml(a.desc) + '</span></div>').join('')
+    : '<div class="muted">' + NoldOJ.escapeHtml(ar.error || '无法查看') + '</div>';
+  // favorites
+  const fr = await NoldOJ.api('/users/' + UID + '/favorites');
+  document.getElementById('fav-list').innerHTML = fr.ok ? (fr.data.items.length ? fr.data.items.map(p =>
+    '<div class="mb"><a href="/problem.html?id=' + p.id + '">' + p.id + '. ' + NoldOJ.escapeHtml(p.title) + '</a> ' + NoldOJ.diffBadge(p.difficulty) + '</div>').join('') : '暂无收藏')
+    : NoldOJ.escapeHtml(fr.error || '无法查看');
+})();
+
+function renderCalendar(days) {
+  const colors = ['var(--bg-soft)', '#9be15d', '#58d68d', '#2ecc71', '#27ae60', '#1e8449'];
+  const maxTotal = Math.max(1, ...days.map(d => d.total));
+  document.getElementById('calendar').innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:3px">' +
+    days.map(d => {
+      const level = d.ac > 0 ? Math.min(5, 1 + Math.floor(d.ac / Math.max(1, maxTotal / 5))) : (d.total > 0 ? 1 : 0);
+      const idx = d.ac > 0 ? Math.max(1, level) : (d.total > 0 ? 1 : 0);
+      const hue = d.total === 0 ? 'background:var(--bg-soft)' : 'background:' + (d.ac > 0 ? colors[idx] : 'var(--primary-dim)');
+      return '<div title="' + d.date + ': 提交' + d.total + ' 通过' + d.ac + '" style="width:12px;height:12px;border-radius:3px;' + hue + '"></div>';
+    }).join('') + '</div>';
+}
+function renderPie(id, data, label) {
+  const el = document.getElementById(id);
+  if (!el || !window.echarts) return;
+  const entries = Object.entries(data || {});
+  if (!entries.length) { el.innerHTML = '<div class="muted">无数据</div>'; return; }
+  window.echarts.init(el).setOption({
+    theme: NoldOJ.theme() === 'dark' ? 'dark' : 'default',
+    tooltip: {},
+    series: [{ type: 'pie', radius: '70%', data: entries.map(([k, v]) => ({ name: k, value: v })) }]
+  });
+}
+</script>
+</body>
+</html>

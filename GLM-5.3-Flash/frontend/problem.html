@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>题目 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="flex spread mb">
+    <div><a href="/problems.html">← 返回题库</a></div>
+    <div class="flex">
+      <button class="btn small secondary" id="fav-btn">☆ 收藏</button>
+      <button class="btn small secondary" id="copy-md-btn">复制为 Markdown</button>
+      <a class="btn small secondary" id="diff-btn-link" href="#">Diff 比较</a>
+    </div>
+  </div>
+  <div class="split">
+    <div class="card" id="left">
+      <h2><span id="p-id"></span>. <span id="p-title"></span></h2>
+      <div class="flex mb" id="p-meta"></div>
+      <div id="p-desc" class="md-body"></div>
+      <h3>输入格式</h3><div id="p-input"></div>
+      <h3>输出格式</h3><div id="p-output"></div>
+      <h3>样例</h3><div id="p-samples"></div>
+      <div id="p-hint-wrap" class="hidden"><h3>提示</h3><div id="p-hint"></div></div>
+      <div class="notice warn mt" id="p-limits"></div>
+    </div>
+    <div class="card" id="right">
+      <div class="tabs flex" id="tabs">
+        <button class="btn small active" data-tab="submit">提交</button>
+        <button class="btn small secondary" data-tab="discuss">讨论</button>
+      </div>
+      <div id="tab-submit" class="mt">
+        <label>语言</label>
+        <select id="lang"></select>
+        <div class="flex spread mt"><label style="margin:0">代码</label>
+          <div class="flex"><button class="btn small secondary" id="add-file-btn" title="多文件提交">+ 文件</button></div>
+        </div>
+        <div id="files-wrap" class="mt"></div>
+        <textarea id="code" class="mono" style="min-height:340px;font-size:13px" spellcheck="false"></textarea>
+        <div class="flex mt">
+          <button class="btn" id="submit-btn" style="flex:1">提交评测</button>
+          <button class="btn secondary" id="save-lang-btn" title="保存为我的默认语言">存为偏好</button>
+        </div>
+        <div id="submit-msg" class="mt"></div>
+        <div id="ai-hint-area" class="mt hidden"></div>
+        <button class="btn small secondary mt hidden" id="ai-hint-btn" style="width:100%">🤖 请求 AI 提示</button>
+      </div>
+      <div id="tab-discuss" class="mt hidden">
+        <div id="discuss-list" class="muted">加载中...</div>
+        <div class="mt" id="discuss-form"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+let PID = Number(NoldOJ.qs('id')) || 1;
+let problem = null;
+let mySubIds = [];
+
+async function loadProblem() {
+  const r = await NoldOJ.api('/problems/' + PID);
+  if (!r.ok) { document.getElementById('left').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>'; return; }
+  const d = r.data;
+  problem = d.problem;
+  document.title = problem.id + '. ' + problem.title + ' - NoldOJ';
+  document.getElementById('p-id').textContent = problem.id;
+  document.getElementById('p-title').textContent = problem.title;
+  document.getElementById('p-meta').innerHTML =
+    NoldOJ.diffBadge(problem.difficulty) +
+    d.tags.map(t => '<span class="tag-pill" style="background:' + t.color + '">' + NoldOJ.escapeHtml(t.name) + '</span>').join('') +
+    '<span class="muted">档位：' + problem.time_limit_ms + 'ms / ' + problem.memory_limit_mb + 'MB</span>';
+  NoldOJ.renderMd(document.getElementById('p-desc'), problem.description_md || '');
+  NoldOJ.renderMd(document.getElementById('p-input'), problem.input_md || '');
+  NoldOJ.renderMd(document.getElementById('p-output'), problem.output_md || '');
+  document.getElementById('fav-btn').textContent = d.favorite ? '★ 已收藏' : '☆ 收藏';
+  document.getElementById('diff-btn-link').href = '/diff.html?problemId=' + PID;
+  // samples
+  const sm = document.getElementById('p-samples');
+  sm.innerHTML = d.samples.length ? d.samples.map((s, i) =>
+    '<div class="split code-box"><div><strong>样例输入 #' + (i + 1) + '</strong><button class="btn small secondary copy-btn">复制</button><pre>' + NoldOJ.escapeHtml(s.input || '') + '</pre></div>' +
+    '<div><strong>样例输出 #' + (i + 1) + '</strong><button class="btn small secondary copy-btn">复制</button><pre>' + NoldOJ.escapeHtml(s.output || '') + '</pre></div></div>').join('<hr style="border:none;border-top:1px solid var(--border)">')
+    : '<span class="muted">无样例</span>';
+  sm.querySelectorAll('.copy-btn').forEach(b => b.onclick = () => {
+    navigator.clipboard.writeText(b.parentElement.querySelector('pre').textContent).then(() => { b.textContent = '已复制'; setTimeout(() => b.textContent = '复制', 1000); });
+  });
+  if (problem.hint_md) { document.getElementById('p-hint-wrap').classList.remove('hidden'); NoldOJ.renderMd(document.getElementById('p-hint'), problem.hint_md); }
+  document.getElementById('p-limits').textContent = '时间限制 ' + problem.time_limit_ms + 'ms ｜ 内存限制 ' + problem.memory_limit_mb + 'MB ｜ 比较方式 ' +
+    ({ strict: '严格文本', loose: '宽松文本', float: '浮点容差', spj: 'Special Judge' })[problem.compare_mode];
+
+  // languages
+  const lr = await NoldOJ.api('/languages');
+  if (lr.ok) {
+    const sel = document.getElementById('lang');
+    sel.innerHTML = lr.data.items.filter(l => l.enabled).map(l => '<option value="' + l.id + '"' +
+      ((NoldOJ.user() && NoldOJ.user().preferredLang == l.id) ? ' selected' : '') + '>' + NoldOJ.escapeHtml(l.name) + '</option>').join('');
+  }
+  // AI hint availability
+  const u = NoldOJ.user();
+  if (u) {
+    const mine = await NoldOJ.api('/submissions?mine=1&problemId=' + PID + '&pageSize=100');
+    if (mine.ok) {
+      mySubIds = mine.data.items.filter(s => s.user_id === u.id).map(s => s.id);
+      const fails = mine.data.items.filter(s => ['wa','tle','mle','re','pc'].includes(s.status)).length;
+      if (fails >= 2) document.getElementById('ai-hint-btn').classList.remove('hidden');
+    }
+  }
+  loadDiscussions();
+}
+
+document.getElementById('fav-btn').onclick = async function () {
+  if (!NoldOJ.user()) return location.href = '/login.html';
+  const r = await NoldOJ.api('/problems/' + PID + '/favorite', { method: 'POST' });
+  if (r.ok) this.textContent = r.data.favorite ? '★ 已收藏' : '☆ 收藏';
+};
+document.getElementById('copy-md-btn').onclick = () => {
+  const md = '# ' + problem.id + '. ' + problem.title + '\n\n' + problem.description_md;
+  navigator.clipboard.writeText(md);
+};
+document.getElementById('save-lang-btn').onclick = async () => {
+  await NoldOJ.api('/users/me', { method: 'PUT', body: { preferredLang: document.getElementById('lang').value } });
+  alert('已保存默认语言');
+};
+
+// ---- submit tabs ----
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#tabs button').forEach(x => { x.classList.replace('active', 'secondary'); x.classList.remove('active'); });
+  b.classList.add('active'); b.classList.remove('secondary');
+  document.getElementById('tab-submit').classList.toggle('hidden', b.dataset.tab !== 'submit');
+  document.getElementById('tab-discuss').classList.toggle('hidden', b.dataset.tab !== 'discuss');
+});
+
+// ---- multi-file ----
+let extraFiles = [];
+document.getElementById('add-file-btn').onclick = () => {
+  const name = prompt('文件名（如 utils.h）：');
+  if (!name) return;
+  const content = prompt('文件内容：') || '';
+  extraFiles.push({ name, content });
+  renderFiles();
+};
+function renderFiles() {
+  const w = document.getElementById('files-wrap');
+  w.innerHTML = extraFiles.map((f, i) =>
+    '<div class="flex spread mb"><span class="mono">' + NoldOJ.escapeHtml(f.name) + '</span><button class="btn small danger" data-i="' + i + '">删除</button></div>').join('');
+  w.querySelectorAll('button').forEach(b => b.onclick = () => { extraFiles.splice(Number(b.dataset.i), 1); renderFiles(); });
+}
+
+// ---- submit ----
+document.getElementById('submit-btn').onclick = async function () {
+  if (!NoldOJ.user()) return location.href = '/login.html';
+  this.disabled = true; this.textContent = '提交中...';
+  const body = {
+    problemId: PID,
+    languageId: Number(document.getElementById('lang').value),
+    code: document.getElementById('code').value
+  };
+  if (extraFiles.length) body.files = [{ name: 'main.' + guessExt(), content: document.getElementById('code').value }, ...extraFiles];
+  const r = await NoldOJ.api('/submissions', { method: 'POST', body });
+  this.disabled = false; this.textContent = '提交评测';
+  const msg = document.getElementById('submit-msg');
+  if (r.ok) {
+    msg.innerHTML = '<div class="notice info">提交成功，记录 <a href="/status-detail.html?id=' + r.data.id + '">#' + r.data.id + '</a>：<span id="live-status">评测中</span></div>';
+    NoldOJ.onSubUpdate(p => {
+      if (p.id === r.data.id) {
+        const el = document.getElementById('live-status');
+        if (el) el.outerHTML = NoldOJ.statusHtml(p.status);
+      }
+    });
+  } else {
+    msg.innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>';
+  }
+};
+function guessExt() {
+  const lid = document.getElementById('lang').selectedOptions[0];
+  const name = lid ? lid.textContent : '';
+  if (name.includes('C++')) return 'cpp'; if (name === 'C') return 'c';
+  if (name.includes('Python')) return 'py'; if (name.includes('Java')) return 'java';
+  if (name.includes('JavaScript')) return 'js'; return 'source';
+}
+
+// ---- AI hint ----
+document.getElementById('ai-hint-btn').onclick = async function () {
+  const area = document.getElementById('ai-hint-area');
+  area.classList.remove('hidden');
+  area.innerHTML = '<div class="notice info">AI 教练思考中...</div>';
+  const r = await NoldOJ.api('/ai/hint', { method: 'POST', body: { problemId: PID } });
+  area.innerHTML = r.ok ? '<div class="notice info"><strong>AI 教练提示：</strong><br>' + NoldOJ.escapeHtml(r.data.hint) + '</div>'
+    : '<div class="notice warn">' + NoldOJ.escapeHtml(r.error) + '</div>';
+};
+
+// ---- discussions ----
+function loadDiscussions() {
+  const box = document.getElementById('discuss-list');
+  NoldOJ.api('/problems/' + PID + '/discussions').then(r => {
+    if (!r.ok) { box.textContent = r.error; return; }
+    box.innerHTML = r.data.items.length ? r.data.items.map(d =>
+      '<div class="mb" style="border:' + (d.official ? '2px solid var(--primary)' : '1px solid var(--border)') + ';border-radius:8px;padding:10px' + '">' +
+      (d.pinned ? '📌 ' : '') + (d.official ? '<span class="tag-pill" style="background:var(--primary)">官方题解</span> ' : '') +
+      '<a href="/discussion.html?id=' + d.id + '"><strong>' + NoldOJ.escapeHtml(d.title) + '</strong></a>' +
+      ' <span class="muted">' + NoldOJ.escapeHtml(d.username) + ' · ' + NoldOJ.timeAgo(d.created_at) + (d.locked ? ' · 🔒已锁定' : '') + '</span></div>').join('')
+      : '<span class="muted">暂无讨论，来发第一帖吧</span>';
+    const u = NoldOJ.user();
+    document.getElementById('discuss-form').innerHTML = u ?
+      '<label>发布讨论</label><input id="d-title" placeholder="标题"><textarea id="d-content" placeholder="内容支持 Markdown 与 LaTeX ($E=mc^2$)"></textarea><button class="btn small mt" id="d-post">发布</button>' : '';
+    const btn = document.getElementById('d-post');
+    if (btn) btn.onclick = async () => {
+      const rr = await NoldOJ.api('/problems/' + PID + '/discussions', {
+        method: 'POST', body: { title: document.getElementById('d-title').value, contentMd: document.getElementById('d-content').value }
+      });
+      if (rr.ok) loadDiscussions(); else alert(rr.error);
+    };
+  });
+}
+
+loadProblem();
+</script>
+</body>
+</html>

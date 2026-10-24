@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>讨论 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card" id="main"></div>
+  <div class="card" id="replies"></div>
+  <div class="card" id="reply-box"></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const DID = Number(NoldOJ.qs('id')) || 1;
+async function load() {
+  const r = await NoldOJ.api('/discussions/' + DID);
+  if (!r.ok) { document.getElementById('main').innerHTML = r.error; return; }
+  const d = r.data.thread;
+  document.title = d.title + ' - NoldOJ 讨论';
+  let modBtns = '';
+  if (r.data.teacher) modBtns = '<div class="flex mt">' +
+    '<button class="btn small secondary" id="m-pin">' + (d.pinned ? '取消置顶' : '置顶') + '</button>' +
+    '<button class="btn small secondary" id="m-official">' + (d.official ? '取消官方' : '标记官方题解') + '</button>' +
+    '<button class="btn small secondary" id="m-lock">' + (d.locked ? '解锁' : '锁定') + '</button></div>';
+  document.getElementById('main').innerHTML =
+    '<div class="flex spread"><h2 style="margin:0">' + (d.pinned ? '📌 ' : '') + NoldOJ.escapeHtml(d.title) + '</h2>' +
+    '<span class="muted">' + NoldOJ.escapeHtml(d.username) + ' · ' + NoldOJ.timeAgo(d.created_at) + (d.locked ? ' · 🔒已锁定' : '') + '</span></div>' +
+    modBtns + '<div id="d-content"></div>' +
+    '<div class="mt"><a href="/problem.html?id=' + d.problem_id + '">← 所属题目</a></div>';
+  NoldOJ.renderMd(document.getElementById('d-content'), d.content_md || '');
+  const mod = (action) => async () => {
+    const rr = await NoldOJ.api('/discussions/' + DID + '/moderate', { method: 'POST', body: { action } });
+    if (rr.ok) load(); else alert(rr.error);
+  };
+  ['m-pin', 'm-official', 'm-lock'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) b.onclick = mod(id.endsWith('pin') ? (d.pinned ? 'unpin' : 'pin') : id.endsWith('official') ? (d.official ? 'unofficial' : 'official') : (d.locked ? 'unlock' : 'lock'));
+  });
+  document.getElementById('replies').innerHTML = '<h3>回复</h3>' + (r.data.replies.length ? r.data.replies.map(rep =>
+    '<div style="border-left:3px solid var(--primary-dim);padding-left:10px;margin:10px 0"><div class="muted"><a href="/profile.html?id=' + rep.user_id + '">' + NoldOJ.escapeHtml(rep.username) + '</a> · ' + NoldOJ.timeAgo(rep.created_at) + '</div>' +
+    '<div>' + escapeSimple(rep.content_md) + '</div>' +
+    (rep.children || []).map(c => '<div style="margin-left:20px;border-left:2px solid var(--border);padding-left:10px;margin-top:6px"><div class="muted">' + NoldOJ.escapeHtml(c.username) + ' · ' + NoldOJ.timeAgo(c.created_at) + '</div><div>' + escapeSimple(c.content_md) + '</div></div>').join('') +
+    '<button class="btn small secondary" data-parent="' + rep.id + '">回复</button></div>').join('') : '<div class="muted">暂无回复</div>');
+  document.querySelectorAll('#replies button[data-parent]').forEach(b => b.onclick = () => reply(Number(b.dataset.parent)));
+  const canReply = NoldOJ.user() && !d.locked;
+  document.getElementById('reply-box').innerHTML = canReply ?
+    '<h3>发表回复</h3><textarea id="reply-text" placeholder="支持 Markdown"></textarea><button class="btn mt" id="reply-btn" style="width:100%">回复</button>'
+    : '<div class="muted">' + (d.locked ? '讨论已锁定' : '请先登录后回复') + '</div>';
+  if (canReply) document.getElementById('reply-btn').onclick = () => reply(null);
+  function reply(parentId) {
+    const t = document.getElementById('reply-text');
+    NoldOJ.api('/discussions/' + DID + '/replies', { method: 'POST', body: { contentMd: t ? t.value : prompt('回复内容：'), parentId } }).then(rr => {
+      if (rr.ok) load(); else alert(rr.error);
+    });
+  }
+}
+function escapeSimple(s) { const div = document.createElement('div'); NoldOJ.renderMd(div, s || ''); return div.innerHTML; }
+load();
+</script>
+</body>
+</html>

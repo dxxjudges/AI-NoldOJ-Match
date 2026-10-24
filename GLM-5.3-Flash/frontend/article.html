@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>文章详情 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card" id="body">加载中...</div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+(async function () {
+  const r = await NoldOJ.api('/articles/' + NoldOJ.qs('id'));
+  if (!r.ok) { document.getElementById('body').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>'; return; }
+  document.title = r.data.title + ' - NoldOJ';
+  NoldOJ.renderMd(document.getElementById('body'),
+    '# ' + r.data.title + '\n\n' + (r.data.content_md || '') + '\n\n---\n*' + NoldOJ.escapeHtml(r.data.username || '') + ' · ' + new Date(r.data.updated_at).toLocaleDateString('zh-CN') + '*' +
+    (r.data.problem_id ? '\n\n> 关联题目：[' + r.data.problem_id + '](/problem.html?id=' + r.data.problem_id + ')' : ''));
+})();
+</script>
+</body>
+</html>

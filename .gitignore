@@ -1,0 +1,13 @@
+node_modules/
+logs/
+tmp/
+uploads/
+data/
+sandbox-work/
+testdata/*/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.err
+package-lock.json.patch

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>题目编辑 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+<style>.preview{border:2px dashed var(--border);border-radius:8px;padding:12px;min-height:60px}</style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2 id="head">新建题目</h2>
+    <label>标题</label><input id="f-title">
+    <div class="form-row mt">
+      <div><label>难度</label><select id="f-diff">
+        <option value="0">入门</option><option value="1">简单</option><option value="2">中等</option>
+        <option value="3">较难</option><option value="4">困难</option><option value="5">专家</option></select></div>
+      <div><label>时限 ms</label><input id="f-tl" value="1000"></div>
+      <div><label>内存 MB</label><input id="f-ml" value="256"></div>
+      <div><label>比较方式</label><select id="f-cmp">
+        <option value="loose">宽松文本</option><option value="strict">严格文本</option>
+        <option value="float">浮点容差</option><option value="spj">Special Judge</option></select></div>
+      <div><label>可见性</label><select id="f-vis"><option value="1">公开</option><option value="0">私有</option></select></div>
+      <div><label>评分模式</label><select id="f-jm"><option value="default">默认</option><option value="custom">自定义评分脚本</option></select></div>
+    </div>
+    <label class="mt">题目标签（选择多项）</label><div id="f-tags" class="flex" style="flex-wrap:wrap"></div>
+    <label class="mt">题目描述（Markdown + KaTeX，如 $E=mc^2$）</label>
+    <textarea id="f-desc" style="min-height:140px;font-family:inherit"></textarea>
+    <label>输入格式</label><textarea id="f-input" style="min-height:70px"></textarea>
+    <label>输出格式</label><textarea id="f-output" style="min-height:70px"></textarea>
+    <label>提示/数据范围</label><textarea id="f-hint" style="min-height:70px"></textarea>
+    <div id="f-tol-wrap" class="hidden"><label>浮点容差</label><input id="f-tol" value="0.000001"></div>
+    <div id="f-script-wrap" class="hidden">
+      <label>整题评分脚本（变量：<code>CASES</code> 通过用例数、<code>PASSED</code> 全部用例、<code>SCORE</code> 默认分；最终输出变量 <code>score</code>）</label>
+      <textarea id="f-script" class="mono" spellcheck="false"></textarea>
+      <div class="muted">示例：<code>score = SCORE; if (PASSED >= CASES) { score = SCORE; } else { score = SCORE * PASSED / CASES; }</code></div>
+    </div>
+    <div class="flex mt">
+      <button class="btn" id="save">保存</button>
+      <button class="btn secondary" id="preview-btn">实时预览</button>
+    </div>
+    <div id="msg"></div>
+  </div>
+  <div class="card hidden" id="preview-card"><h3>预览</h3><div id="preview"></div></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+if (!NoldOJ.user() || NoldOJ.user().role === 'user') location.href = '/';
+const PID = Number(NoldOJ.qs('id')) || 0;
+let tagIds = [];
+(async function () {
+  const tr = await NoldOJ.api('/tags');
+  if (tr.ok) {
+    document.getElementById('f-tags').innerHTML = tr.data.items.map(t =>
+      '<label style="display:flex;align-items:center;gap:4px;width:auto;margin:2px"><input type="checkbox" value="' + t.id + '" style="width:auto"> <span class="tag-pill" style="background:' + t.color + '">' + NoldOJ.escapeHtml(t.name) + '</span></label>').join('');
+    document.querySelectorAll('#f-tags input').forEach(cb => cb.onchange = () => {
+      tagIds = cb.checked ? [...new Set([...tagIds, Number(cb.value)])] : tagIds.filter(x => x !== Number(cb.value));
+    });
+  }
+  if (PID) {
+    document.getElementById('head').textContent = '编辑题目 #' + PID;
+    const r = await NoldOJ.api('/problems/' + PID);
+    if (r.ok) {
+      const p = r.data.problem;
+      document.getElementById('f-title').value = p.title;
+      document.getElementById('f-diff').value = p.difficulty;
+      document.getElementById('f-tl').value = p.time_limit_ms;
+      document.getElementById('f-ml').value = p.memory_limit_mb;
+      document.getElementById('f-cmp').value = p.compare_mode;
+      document.getElementById('f-vis').value = p.is_public;
+      document.getElementById('f-jm').value = p.judge_mode;
+      document.getElementById('f-tol').value = p.float_tolerance;
+      document.getElementById('f-desc').value = p.description_md || '';
+      document.getElementById('f-input').value = p.input_md || '';
+      document.getElementById('f-output').value = p.output_md || '';
+      document.getElementById('f-hint').value = p.hint_md || '';
+      document.getElementById('f-script').value = p.score_script || '';
+      tagIds = r.data.tags.map(t => t.id);
+      r.data.tags.forEach(t => { const cb = document.querySelector('#f-tags input[value="' + t.id + '"]'); if (cb) cb.checked = true; });
+      toggleSpecial();
+    }
+  }
+  document.getElementById('f-cmp').onchange = document.getElementById('f-jm').onchange = toggleSpecial;
+  function toggleSpecial() {
+    document.getElementById('f-tol-wrap').classList.toggle('hidden', document.getElementById('f-cmp').value !== 'float');
+    document.getElementById('f-script-wrap').classList.toggle('hidden', document.getElementById('f-jm').value !== 'custom');
+  }
+})();
+
+document.getElementById('preview-btn').onclick = () => {
+  document.getElementById('preview-card').classList.remove('hidden');
+  NoldOJ.renderMd(document.getElementById('preview'), document.getElementById('f-desc').value);
+};
+document.getElementById('save').onclick = async () => {
+  const body = {
+    title: document.getElementById('f-title').value,
+    difficulty: Number(document.getElementById('f-diff').value),
+    timeLimitMs: Number(document.getElementById('f-tl').value),
+    memoryLimitMb: Number(document.getElementById('f-ml').value),
+    compareMode: document.getElementById('f-cmp').value,
+    isPublic: document.getElementById('f-vis').value === '1',
+    judgeMode: document.getElementById('f-jm').value,
+    floatTolerance: Number(document.getElementById('f-tol').value),
+    descriptionMd: document.getElementById('f-desc').value,
+    inputMd: document.getElementById('f-input').value,
+    outputMd: document.getElementById('f-output').value,
+    hintMd: document.getElementById('f-hint').value,
+    scoreScript: document.getElementById('f-script').value,
+    tagIds
+  };
+  const r = PID ? await NoldOJ.api('/problems/' + PID, { method: 'PUT', body })
+    : await NoldOJ.api('/problems', { method: 'POST', body });
+  const msg = document.getElementById('msg');
+  if (r.ok) { msg.innerHTML = '<div class="notice info">已保存</div>'; if (!PID) location.href = '/problem-edit.html?id=' + r.data.id; }
+  else msg.innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>';
+};
+</script>
+</body>
+</html>

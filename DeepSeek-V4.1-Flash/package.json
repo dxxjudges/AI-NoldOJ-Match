@@ -1,0 +1,23 @@
+{
+  "name": "noldoj",
+  "version": "2.1.0",
+  "description": "NoldOJ - Windows-native Online Judge system",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "init": "node backend/scripts/init.js",
+    "migrate": "node backend/scripts/migrate.js",
+    "test": "node --import ./backend/test/setup.js --test \"backend/test/*.test.js\"",
+    "lint": "eslint backend frontend/js",
+    "lint:fix": "eslint backend frontend/js --fix"
+  },
+  "devDependencies": {
+    "eslint": "^9.15.0"
+  }
+}

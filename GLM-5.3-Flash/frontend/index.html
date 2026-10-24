@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoldOJ - 在线评测系统</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner">
+  <a href="/" class="brand">NoldOJ</a>
+  <div class="nav-links" id="nav-links"></div>
+  <div class="nav-right" id="nav-right"></div>
+</div></nav>
+<main class="container">
+  <div id="ann-banner" class="mb"></div>
+  <div class="card">
+    <h2>欢迎来到 NoldOJ 在线评测系统</h2>
+    <p class="muted">支持多语言评测 · Windows 原生沙箱 · 实时状态推送 · 暗色模式 · AI 代码安全审查</p>
+    <div class="grid-stats mt" id="stats"></div>
+  </div>
+  <div class="split">
+    <div class="card">
+      <h3>最新公告</h3>
+      <div id="ann-list" class="muted">加载中...</div>
+    </div>
+    <div class="card">
+      <h3>热门题目</h3>
+      <div id="hot-problems" class="muted">加载中...</div>
+    </div>
+  </div>
+</main>
+<footer class="footer">NoldOJ · MIT License · 本地部署评测环境，请勿直接公网暴露</footer>
+<script src="/static/app.js"></script>
+<script>
+(async function(){
+  const stats = await NoldOJ.api('/stats');
+  if (stats.ok) {
+    document.getElementById('stats').innerHTML = [
+      ['用户', stats.data.users], ['公开题目', stats.data.problems],
+      ['提交总数', stats.data.submissions], ['通过提交', stats.data.accepted],
+      ['通过率', stats.data.acceptedRatio + '%'], ['比赛', stats.data.contests]
+    ].map(([t, n]) => '<div class="stat-box"><div class="n">' + n + '</div><div class="t">' + t + '</div></div>').join('');
+  }
+  const anns = await NoldOJ.api('/announcements');
+  if (anns.ok) {
+    const items = anns.data.items.slice(0, 5);
+    document.getElementById('ann-list').innerHTML = items.length
+      ? items.map(a => '<div class="mb"><a href="/announcement.html?id=' + a.id + '">' + (a.pinned ? '📌 ' : '') + NoldOJ.escapeHtml(a.title) + '</a></div>').join('')
+      : '暂无公告';
+    const pinned = anns.data.items.find(a => a.pinned);
+    if (pinned) document.getElementById('ann-banner').innerHTML = '<div class="notice info">📢 <a href="/announcement.html?id=' + pinned.id + '">' + NoldOJ.escapeHtml(pinned.title) + '</a></div>';
+  }
+  const probs = await NoldOJ.api('/problems?pageSize=8');
+  if (probs.ok) {
+    document.getElementById('hot-problems').innerHTML = probs.data.items.length
+      ? probs.data.items.map(p => '<div class="mb flex spread"><a href="/problem.html?id=' + p.id + '">' + p.id + '. ' + NoldOJ.escapeHtml(p.title) + '</a> ' + NoldOJ.diffBadge(p.difficulty) + '</div>').join('')
+      : '暂无题目，请登录教师账号在管理面板创建题目。';
+  }
+})();
+</script>
+</body>
+</html>

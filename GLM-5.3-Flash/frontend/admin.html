@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>管理面板 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+<style>
+.tab-content.hidden { display:none; }
+.admin-actions button { margin-right:4px; }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+<div class="card flex" id="tabs" style="flex-wrap:wrap">
+  <button class="btn small" data-tab="users">用户</button>
+  <button class="btn small secondary" data-tab="problems">题目</button>
+  <button class="btn small secondary" data-tab="languages">语言</button>
+  <button class="btn small secondary" data-tab="announcements">公告</button>
+  <button class="btn small secondary" data-tab="contests">比赛</button>
+  <button class="btn small secondary" data-tab="groups">用户组</button>
+  <button class="btn small secondary" data-tab="config">配置</button>
+</div>
+
+<!-- =============== USERS =============== -->
+<div class="card tab-content" id="tab-users">
+  <h2>用户管理</h2>
+  <div class="flex">
+    <input id="u-search" class="search-box" placeholder="搜索用户名/ID">
+    <button class="btn small" id="u-create-btn">＋ 创建用户</button>
+    <button class="btn small secondary" id="import-btn">导入 Excel</button>
+  </div>
+  <div class="mt" id="import-form" style="display:none"></div>
+  <div class="mt" id="u-create-form" style="display:none"></div>
+  <table class="data mt">
+    <thead><tr><th>ID</th><th>用户名</th><th>身份</th><th>状态</th><th>Rating</th><th>图床配额</th><th>操作</th></tr></thead>
+    <tbody id="u-body"><tr><td colspan="7" class="muted">加载中...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- =============== PROBLEMS =============== -->
+<div class="card tab-content hidden" id="tab-problems">
+  <h2>题目管理</h2>
+  <button class="btn small" id="p-create-btn">＋ 新建题目</button>
+  <table class="data mt">
+    <thead><tr><th>ID</th><th>标题</th><th>难度</th><th>可见性</th><th>测点数</th><th>通过/提交</th><th>操作</th></tr></thead>
+    <tbody id="p-body"><tr><td colspan="7" class="muted">加载中...</td></tr></tbody>
+  </table>
+  <div id="p-editor"></div>
+</div>
+
+<!-- =============== LANGUAGES =============== -->
+<div class="card tab-content hidden" id="tab-languages">
+  <h2>语言管理（超级管理员）</h2>
+  <table class="data">
+    <thead><tr><th>ID</th><th>代码</th><th>名称</th><th>编译命令</th><th>运行命令</th><th>启用</th><th>操作</th></tr></thead>
+    <tbody id="l-body"></tbody>
+  </table>
+</div>
+
+<!-- =============== ANNOUNCEMENTS =============== -->
+<div class="card tab-content hidden" id="tab-announcements">
+  <h2>公告管理</h2>
+  <button class="btn small" id="a-create-btn">＋ 发布公告</button>
+  <table class="data mt">
+    <thead><tr><th>ID</th><th>标题</th><th>置顶</th><th>时间</th><th>操作</th></tr></thead>
+    <tbody id="a-body"></tbody>
+  </table>
+</div>
+
+<!-- =============== CONTESTS =============== -->
+<div class="card tab-content hidden" id="tab-contests">
+  <h2>比赛管理</h2>
+  <button class="btn small" id="c-create-btn">＋ 创建比赛</button>
+  <table class="data mt">
+    <thead><tr><th>ID</th><th>标题</th><th>开始</th><th>结束</th><th>冻结</th><th>操作</th></tr></thead>
+    <tbody id="c-body"></tbody>
+  </table>
+</div>
+
+<!-- =============== GROUPS =============== -->
+<div class="card tab-content hidden" id="tab-groups">
+  <h2>用户组管理</h2>
+  <button class="btn small" id="g-create-btn">＋ 创建用户组</button>
+  <input type="file" id="g-import-file" accept=".xlsx" style="display:none">
+  <table class="data mt">
+    <thead><tr><th>ID</th><th>名称</th><th>说明</th><th>系统</th><th>成员数</th><th>Excel 导入</th><th>操作</th></tr></thead>
+    <tbody id="g-body"></tbody>
+  </table>
+</div>
+
+<!-- =============== CONFIG =============== -->
+<div class="card tab-content hidden" id="tab-config">
+  <h2>系统配置（超级管理员，热生效）</h2>
+  <div id="config-form"></div>
+  <button class="btn mt" id="config-save">保存配置</button>
+</div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+if (!NoldOJ.user() || NoldOJ.user().role === 'user') { location.href = '/'; }
+const isSuper = NoldOJ.user().role === 'super';
+const isTeacherPlus = ['teacher', 'admin', 'super'].includes(NoldOJ.user().role);
+const isAdmin = ['admin', 'super'].includes(NoldOJ.user().role);
+
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#tabs button').forEach(x => { x.classList.add('secondary'); x.classList.remove(''); });
+  b.classList.remove('secondary');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+  document.getElementById('tab-' + b.dataset.tab).classList.remove('hidden');
+  loaders[b.dataset.tab] && loaders[b.dataset.tab]();
+});
+const hash = location.hash.slice(1);
+if (hash) { const b = document.querySelector('#tabs button[data-tab="' + hash + '"]'); if (b) b.click(); }
+
+const loaders = {};
+
+// ------------------ USERS ------------------
+loaders.users = async function () {
+  const r = await NoldOJ.api('/admin/users?search=' + document.getElementById('u-search').value.trim());
+  if (!r.ok) { document.getElementById('u-body').innerHTML = '<tr><td colspan=7>' + r.error + '</td></tr>'; return; }
+  document.getElementById('u-body').innerHTML = r.data.items.map(u => {
+    const canTouch = NoldOJ.user().role === 'super' || ['user','teacher'].includes(u.role) || isAdmin && u.role === 'user' || u.id === NoldOJ.user().id;
+    return '<tr><td>' + u.id + '</td><td><a href="/profile.html?id=' + u.id + '">' + NoldOJ.escapeHtml(u.username) + '</a></td>' +
+      '<td><span class="tag-pill" style="background:var(--primary)">' + NoldOJ.ROLE_NAME[u.role] + '</span></td>' +
+      '<td>' + (u.banned ? '<span class="st-wa">封禁: ' + NoldOJ.escapeHtml(u.banReason || '') + '</span>' : '<span class="st-ac">正常</span>') + '</td>' +
+      '<td>' + u.rating + '</td><td>' + NoldOJ.fmtBytes(u.usedBytes) + ' / ' + u.quotaGb + 'GB</td>' +
+      '<td class="admin-actions">' +
+      (u.banned ? '<button class="btn small secondary" data-act="unban" data-id="' + u.id + '">解封</button>' : '<button class="btn small danger" data-act="ban" data-id="' + u.id + '">封禁</button>') +
+      '<button class="btn small secondary" data-act="kick" data-id="' + u.id + '">强制下线</button>' +
+      '<button class="btn small secondary" data-act="quota" data-id="' + u.id + '">配额</button>' +
+      '<button class="btn small secondary" data-act="psw" data-id="' + u.id + '">重置密码</button>' +
+      (isSuper ? '<button class="btn small secondary" data-act="role" data-id="' + u.id + '">角色</button>' +
+      '<button class="btn small secondary" data-act="rating" data-id="' + u.id + '">Rating</button>' +
+      '<button class="btn small secondary" data-act="su" data-id="' + u.id + '">免密登录</button>' +
+      '<button class="btn small danger" data-act="del" data-id="' + u.id + '">删除</button>' : '') +
+      '</td></tr>';
+  }).join('');
+  document.querySelectorAll('#u-body button').forEach(b => b.onclick = async () => {
+    const id = b.dataset.id, act = b.dataset.act;
+    let rr;
+    if (act === 'ban') rr = await NoldOJ.api('/admin/users/' + id + '/ban', { method: 'POST', body: { reason: prompt('封禁原因：', '违反规则') } });
+    else if (act === 'unban') rr = await NoldOJ.api('/admin/users/' + id + '/unban', { method: 'POST' });
+    else if (act === 'kick') rr = await NoldOJ.api('/admin/users/' + id + '/force-logout', { method: 'POST' });
+    else if (act === 'quota') {
+      const u = r.data.items.find(x => String(x.id) === id);
+      const quota = prompt('图床总配额 GB：', u.quotaGb); if (quota === null) return;
+      const maxf = prompt('单文件上限 MB：', u.maxFileMb); if (maxf === null) return;
+      rr = await NoldOJ.api('/admin/users/' + id, { method: 'PUT', body: { quotaGb: Number(quota), maxFileMb: Number(maxf) } });
+    }
+    else if (act === 'psw') { const p = prompt('新密码（留空随机生成）：'); if (p === null) return; rr = await NoldOJ.api('/admin/users/' + id + '/reset-password', { method: 'POST', body: { password: p || undefined } }); if (rr.ok) alert('新密码：' + rr.data.password); }
+    else if (act === 'role') { const role = prompt('角色（user/teacher/admin/super）：', r.data.items.find(x => String(x.id) === id).role); if (!role) return; rr = await NoldOJ.api('/admin/users/' + id + '/role', { method: 'POST', body: { role } }); }
+    else if (act === 'rating') { const rt = prompt('设置 Rating：'); if (rt === null) return; rr = await NoldOJ.api('/admin/users/' + id + '/rating', { method: 'POST', body: { rating: Number(rt) } }); }
+    else if (act === 'su') rr = await NoldOJ.api('/admin/users/' + id + '/passwordless-login', { method: 'POST' });
+    else if (act === 'del') { if (!confirm('确认删除该用户？其 ID 可被新用户复用。')) return; rr = await NoldOJ.api('/admin/users/' + id, { method: 'DELETE' }); }
+    if (rr && rr.ok) { if (act === 'su') { NoldOJ.setToken(rr.data.accessToken); NoldOJ.setUser(rr.data.user); location.href = '/'; } else loaders.users(); }
+    else if (rr) alert(rr.error);
+  });
+};
+document.getElementById('u-search').oninput = () => loaders.users();
+
+document.getElementById('u-create-btn').onclick = () => {
+  const f = document.getElementById('u-create-form');
+  f.style.display = 'block';
+  f.innerHTML = '<h3>创建用户</h3><label>用户名</label><input id="nu-name"><label>密码（留空自动生成强密码）</label><input id="nu-pass">' +
+    '<label>角色</label><select id="nu-role"><option>user</option><option>teacher</option><option>admin</option>' + (isSuper ? '<option>super</option>' : '') + '</select>' +
+    '<button class="btn small mt" id="nu-go">创建</button>';
+  document.getElementById('nu-go').onclick = async () => {
+    const rr = await NoldOJ.api('/admin/users', { method: 'POST', body: {
+      username: document.getElementById('nu-name').value.trim(),
+      password: document.getElementById('nu-pass').value || undefined,
+      role: document.getElementById('nu-role').value
+    }});
+    if (rr.ok) { alert('创建成功，密码：' + rr.data.password); f.style.display = 'none'; loaders.users(); }
+    else alert(rr.error);
+  };
+};
+
+// Excel batch import
+document.getElementById('import-btn').onclick = () => {
+  const f = document.getElementById('import-form');
+  f.style.display = 'block';
+  f.innerHTML = '<h3>Excel 批量导入成员（仅超级管理员，自定义用户组）</h3>' +
+    '<label>目标用户组</label><select id="imp-group"></select>' +
+    '<label>默认密码（至少6位，文件中的新账号都会使用该密码）</label><input id="imp-pass" type="password">' +
+    '<label>xlsx 文件（第一列为用户名）</label><input type="file" id="imp-file" accept=".xlsx">' +
+    '<button class="btn small mt" id="imp-go">导入</button>';
+  NoldOJ.api('/admin/groups').then(g => {
+    document.getElementById('imp-group').innerHTML = g.data.items.filter(x => !x.is_system).map(x =>
+      '<option value="' + x.id + '">' + NoldOJ.escapeHtml(x.name) + '</option>').join('') || '<option value="">（暂无自定义组，请先创建）</option>';
+  });
+  document.getElementById('imp-go').onclick = async () => {
+    const gid = document.getElementById('imp-group').value;
+    const pass = document.getElementById('imp-pass').value;
+    const file = document.getElementById('imp-file').files[0];
+    if (!gid || !pass || pass.length < 6 || !file) { alert('请选择用户组、默认密码（>=6位）和 xlsx 文件'); return; }
+    const fd = new FormData();
+    fd.append('file', file); fd.append('password', pass);
+    const res = await fetch('/api/admin/groups/' + gid + '/import-excel', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + NoldOJ.token() },
+      body: fd
+    });
+    const rr = await res.json();
+    if (rr.ok) { alert('导入完成：新建 ' + rr.data.created + ' 个账号，加入 ' + rr.data.added + ' 人，失败 ' + rr.data.failed); f.style.display = 'none'; }
+    else alert(rr.error);
+  };
+};
+
+// ------------------ PROBLEMS ------------------
+loaders.problems = async function () {
+  const r = await NoldOJ.api('/problems?showAll=1&pageSize=100');
+  if (!r.ok) return;
+  document.getElementById('p-body').innerHTML = r.data.items.map(p =>
+    '<tr><td>' + p.id + '</td><td><a href="/problem.html?id=' + p.id + '">' + NoldOJ.escapeHtml(p.title) + '</a></td>' +
+    '<td>' + NoldOJ.diffName(p.difficulty) + '</td><td>' + (p.is_public ? '公开' : '私有') + '</td>' +
+    '<td>' + (p.testcaseCount !== undefined ? p.testcaseCount : '-') + '</td>' +
+    '<td>' + p.accepted_count + '/' + p.submit_count + '</td>' +
+    '<td class="admin-actions"><button class="btn small secondary" data-edit="' + p.id + '">编辑</button>' +
+    '<button class="btn small secondary" data-cases="' + p.id + '">测点</button>' +
+    '<button class="btn small secondary" data-testdata="' + p.id + '">AI生成数据</button>' +
+    '<button class="btn small secondary" data-plag="' + p.id + '">查重</button>' +
+    '<button class="btn small danger" data-del="' + p.id + '">删除</button></td></tr>').join('');
+  document.querySelectorAll('#p-body button').forEach(b => b.onclick = async () => {
+    if (b.dataset.edit) location.href = '/problem-edit.html?id=' + b.dataset.edit;
+    else if (b.dataset.cases) location.href = '/testcases.html?id=' + b.dataset.cases;
+    else if (b.dataset.plag) { const rr = await NoldOJ.api('/plagiarism/start', { method: 'POST', body: { problemId: Number(b.dataset.plag) } }); if (rr.ok) location.href = '/plagiarism.html?id=' + rr.data.reportId; else alert(rr.error); }
+    else if (b.dataset.testdata) {
+      const tc = prompt('AI 生成测试数据\n普通用例数量（1-10）：', '5');
+      if (!tc) return; const ev = prompt('边界用例数量（0-10）：', '3'); if (ev === null) return;
+      const rr = await NoldOJ.api('/problems/' + b.dataset.testdata + '/ai-testdata', { method: 'POST', body: { normalCount: Number(tc), edgeCount: Number(ev) } });
+      alert(rr.ok ? '已生成 ' + rr.data.generated + ' 组测试数据并写入数据库' : rr.error);
+    }
+    else if (b.dataset.del) { if (!confirm('确认删除题目？题号可被新题目复用。')) return; const rr = await NoldOJ.api('/problems/' + b.dataset.del, { method: 'DELETE' }); if (rr.ok) loaders.problems(); else alert(rr.error); }
+  });
+};
+document.getElementById('p-create-btn').onclick = () => location.href = '/problem-edit.html';
+
+// ------------------ LANGUAGES ------------------
+loaders.languages = async function () {
+  if (!isSuper) { document.getElementById('tab-languages').innerHTML = '<div class="notice warn">仅超级管理员可管理语言</div>'; return; }
+  const r = await NoldOJ.api('/languages');
+  if (!r.ok) return;
+  document.getElementById('l-body').innerHTML = r.data.items.map(l =>
+    '<tr><td>' + l.id + '</td><td class="mono">' + l.code + '</td><td>' + NoldOJ.escapeHtml(l.name) + '</td>' +
+    '<td class="mono muted">' + NoldOJ.escapeHtml(l.compile_cmd || '（解释执行）') + '</td>' +
+    '<td class="mono muted">' + NoldOJ.escapeHtml(l.run_cmd) + '</td>' +
+    '<td>' + (l.enabled ? '<span class="st-ac">✔</span>' : '✘') + '</td>' +
+    '<td><button class="btn small secondary" data-tog="' + l.id + '">' + (l.enabled ? '禁用' : '启用') + '</button> <button class="btn small danger" data-del="' + l.id + '">删除</button></td></tr>').join('') +
+    '<tr><td colspan="7"><button class="btn small" id="l-add">＋ 新增语言</button></td></tr>';
+  document.getElementById('l-add').onclick = () => {
+    const code = prompt('语言代码（如 rust）：'); if (!code) return;
+    const name = prompt('语言名称：'); if (!name) return;
+    const compile = prompt('编译命令（留空表示解释执行）：', '') || '';
+    const run = prompt('运行命令（占位符 {src} {exe} {dir}）：'); if (!run) return;
+    NoldOJ.api('/languages', { method: 'POST', body: { code, name, compileCmd: compile, runCmd: run } }).then(() => loaders.languages());
+  };
+  document.querySelectorAll('#l-body button').forEach(b => b.onclick = async () => {
+    if (b.dataset.tog) {
+      const l = r.data.items.find(x => String(x.id) === b.dataset.tog);
+      const rr = await NoldOJ.api('/languages/' + b.dataset.tog, { method: 'PUT', body: { enabled: !l.enabled } });
+      if (rr.ok) loaders.languages();
+    } else if (b.dataset.del) {
+      if (!confirm('确认删除该语言？')) return;
+      await NoldOJ.api('/languages/' + b.dataset.del, { method: 'DELETE' }); loaders.languages();
+    }
+  });
+};
+
+// ------------------ ANNOUNCEMENTS ------------------
+loaders.announcements = async function () {
+  const r = await NoldOJ.api('/announcements');
+  if (!r.ok) return;
+  document.getElementById('a-body').innerHTML = r.data.items.map(a =>
+    '<tr><td>' + a.id + '</td><td' + +'><a href="/announcement.html?id=' + a.id + '">' + NoldOJ.escapeHtml(a.title) + '</a></td>' +
+    '<td>' + (a.pinned ? '📌' : '') + '</td><td class="muted">' + new Date(a.created_at).toLocaleDateString('zh-CN') + '</td>' +
+    '<td><button class="btn small secondary" data-pin="' + a.id + '" data-v="' + (a.pinned ? 0 : 1) + '">' + (a.pinned ? '取消置顶' : '置顶') + '</button> ' +
+    '<button class="btn small secondary" data-edit="' + a.id + '">编辑</button> <button class="btn small danger" data-del="' + a.id + '">删除</button></td></tr>').join('');
+  document.getElementById('a-create-btn').onclick = () => {
+    const t = prompt('公告标题：'); if (!t) return;
+    const c = prompt('公告内容（Markdown）：'); if (c === null) return;
+    NoldOJ.api('/announcements', { method: 'POST', body: { title: t, contentMd: c } }).then(loaders.announcements);
+  };
+  document.querySelectorAll('#a-body button').forEach(b => b.onclick = async () => {
+    if (b.dataset.pin) { const rr = await NoldOJ.api('/announcements/' + b.dataset.pin, { method: 'PUT', body: { pinned: b.dataset.v === '1' } }); if (rr.ok) loaders.announcements(); }
+    else if (b.dataset.edit) {
+      const t = prompt('新标题：'); if (t === null) return;
+      const c = prompt('新内容：', ''); if (c === null) return;
+      const rr = await NoldOJ.api('/announcements/' + b.dataset.edit, { method: 'PUT', body: { title: t, contentMd: c } });
+      if (rr.ok) loaders.announcements();
+    }
+    else if (b.dataset.del) { if (!confirm('确认删除公告？')) return; await NoldOJ.api('/announcements/' + b.dataset.del, { method: 'DELETE' }); loaders.announcements(); }
+  });
+};
+
+// ------------------ CONTESTS ------------------
+loaders.contests = async function () {
+  const r = await NoldOJ.api('/contests');
+  if (!r.ok) return;
+  document.getElementById('c-body').innerHTML = r.data.items.map(c =>
+    '<tr><td>' + c.id + '</td><td><a href="/contest.html?id=' + c.id + '">' + NoldOJ.escapeHtml(c.title) + '</a></td>' +
+    '<td>' + new Date(c.start_time).toLocaleString('zh-CN') + '</td><td>' + new Date(c.end_time).toLocaleString('zh-CN') + '</td>' +
+    '<td>' + c.freeze_minutes + ' 分钟</td>' +
+    '<td class="admin-actions"><a class="btn small secondary" href="/contest-manage.html?id=' + c.id + '">管理</a>' +
+    '<button class="btn small danger" data-del="' + c.id + '">删除</button></td></tr>').join('');
+  document.getElementById('c-create-btn').onclick = () => location.href = '/contest-manage.html';
+  document.querySelectorAll('#c-body button').forEach(b => b.onclick = async () => {
+    if (!confirm('确认删除比赛及其配置？')) return;
+    const rr = await NoldOJ.api('/contests/' + b.dataset.del, { method: 'DELETE' });
+    if (rr.ok) loaders.contests();
+  });
+};
+
+// ------------------ GROUPS ------------------
+loaders.groups = async function () {
+  const r = await NoldOJ.api('/admin/groups');
+  if (!r.ok) return;
+  document.getElementById('g-body').innerHTML = r.data.items.map(g =>
+    '<tr><td>' + g.id + '</td><td>' + NoldOJ.escapeHtml(g.name) + '</td><td class="muted">' + NoldOJ.escapeHtml(g.description || '') + '</td>' +
+    '<td>' + (g.is_system ? '系统' : '自定义') + '</td><td>' + g.member_count + '</td>' +
+    '<td>' + (g.is_system ? '-' : '<button class="btn small secondary" data-imp="' + g.id + '">选择xlsx导入</button>') + '</td>' +
+    '<td><button class="btn small secondary" data-members="' + g.id + '">成员</button>' +
+    (!g.is_system ? '<button class="btn small secondary" data-vis="' + g.id + '">可见性</button><button class="btn small danger" data-del="' + g.id + '">删除</button>' : '') + '</td></tr>').join('');
+  document.getElementById('g-create-btn').onclick = () => {
+    const n = prompt('用户组名称：'); if (!n) return;
+    NoldOJ.api('/admin/groups', { method: 'POST', body: { name: n, description: prompt('描述：', '') || '' } }).then(loaders.groups);
+  };
+  document.querySelectorAll('#g-body button').forEach(b => b.onclick = async () => {
+    if (b.dataset.members) {
+      const rr = await NoldOJ.api('/admin/groups/' + b.dataset.members + '/members');
+      const add = prompt('成员列表：\n' + (rr.data.items.map(m => m.id + ' ' + m.username).join('\n') || '（空）') + '\n\n输入要添加的用户ID（逗号分隔），或前缀 - 表示移除：');
+      if (add === null) return;
+      const ids = add.split(',').map(s => s.trim()).filter(Boolean).map(Number).filter(Boolean);
+      const remove = ids.length && add.trim().startsWith('-');
+      await NoldOJ.api('/admin/groups/' + b.dataset.members + '/members', {
+        method: 'POST', body: { userIds: ids.map(x => Math.abs(x)), remove }
+      });
+      loaders.groups();
+    } else if (b.dataset.vis) {
+      const et = prompt('实体类型（problem/contest/exam/problemset）：', 'problem'); if (!et) return;
+      const eid = prompt('实体ID：'); if (!eid) return;
+      await NoldOJ.api('/admin/groups/' + b.dataset.vis + '/visibility', { method: 'POST', body: { entityType: et, entityIds: [Number(eid)] } });
+      alert('已绑定：该实体从此仅限本组成员与管理员可见');
+    } else if (b.dataset.del) {
+      if (!confirm('确认删除用户组？')) return;
+      const rr = await NoldOJ.api('/admin/groups/' + b.dataset.del, { method: 'DELETE' });
+      if (rr.ok) loaders.groups(); else alert(rr.error);
+    } else if (b.dataset.imp) {
+      const fileInput = document.getElementById('g-import-file');
+      fileInput.onchange = async () => {
+        const pass = prompt('新账号默认密码（>=6位）：');
+        if (!pass || pass.length < 6) return;
+        const fd = new FormData();
+        fd.append('file', fileInput.files[0]); fd.append('password', pass);
+        const res = await fetch('/api/admin/groups/' + b.dataset.imp + '/import-excel', {
+          method: 'POST', headers: { 'Authorization': 'Bearer ' + NoldOJ.token() }, body: fd
+        });
+        const rr = await res.json();
+        alert(rr.ok ? '导入完成：新建 ' + rr.data.created + '，加入 ' + rr.data.added + '，失败 ' + rr.data.failed : rr.error);
+        loaders.groups();
+      };
+      fileInput.click();
+    }
+  });
+};
+
+// ------------------ CONFIG ------------------
+loaders.config = async function () {
+  if (!isSuper) { document.getElementById('tab-config').innerHTML = '<div class="notice warn">仅超级管理员可修改配置</div>'; return; }
+  const r = await NoldOJ.api('/admin/config');
+  if (!r.ok) return;
+  const c = r.data;
+  document.getElementById('config-form').innerHTML = [
+    toggle('registrationOpen', '开放访客自主注册', c.core.registrationOpen),
+    toggle('captchaEnabled', '登录/注册图形验证码', c.captcha.enabled),
+    toggle('securityReview', 'AI 代码安全审查（恶意代码自动封禁）', c.ai.securityReview.enabled),
+    toggle('hintEnabled', 'AI 提示（教练模式）', c.ai.hint.enabled),
+    toggle('testdataEnabled', 'AI 测试数据生成', c.ai.testdata.enabled),
+    toggle('emailEnabled', '邮件发送', c.email.enabled),
+    toggle('corsEnabled', 'CORS 跨域', c.cors.enabled),
+    '<h3>AI 服务</h3><label>服务地址</label><input id="cf-aiurl" value="' + NoldOJ.escapeHtml(c.ai.securityReview.baseUrl) + '">' +
+    '<label>模型名</label><input id="cf-aimodel" value="' + NoldOJ.escapeHtml(c.ai.securityReview.model) + '">' +
+    '<label>API Key（可选）</label><input id="cf-aikey" value="' + NoldOJ.escapeHtml(c.ai.securityReview.apiKey || '') + '">' +
+    '<h3>限流（每分钟）</h3><div class="form-row"><div><label>登录</label><input id="cf-login" value="' + c.core.loginRateLimit + '"></div>' +
+    '<div><label>注册</label><input id="cf-reg" value="' + c.core.registerRateLimit + '"></div>' +
+    '<div><label>提交</label><input id="cf-sub" value="' + c.core.submissionRateLimit + '"></div>' +
+    '<div><label>IDE</label><input id="cf-ide" value="' + c.core.ideRateLimit + '"></div></div>' +
+    '<h3>CORS 白名单（逗号分隔）</h3><input id="cf-origins" value="' + NoldOJ.escapeHtml((c.cors.origins || []).join(',')) + '">' +
+    '<h3>邮件发件人</h3><input id="cf-mailfrom" value="' + NoldOJ.escapeHtml(c.email.from || '') + '">'
+  ].join('');
+  function toggle(id, label, v) {
+    return '<label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="cf-' + id + '"' + (v ? ' checked' : '') + ' style="width:auto"> ' + label + '</label>';
+  }
+  document.getElementById('config-save').onclick = async () => {
+    const g = id => document.getElementById('cf-' + id);
+    const rr = await NoldOJ.api('/admin/config', {
+      method: 'POST', body: {
+        registrationOpen: g('registrationOpen').checked,
+        captchaEnabled: g('captchaEnabled').checked,
+        emailEnabled: g('emailEnabled').checked,
+        corsEnabled: g('corsEnabled').checked,
+        securityReview: g('securityReview').checked,
+        hintEnabled: g('hintEnabled').checked,
+        testdataEnabled: g('testdataEnabled').checked,
+        aiBaseUrl: g('aiurl').value, aiModel: g('aimodel').value, aiApiKey: g('aikey').value,
+        loginRateLimit: Number(g('login').value), registerRateLimit: Number(g('reg').value),
+        submissionRateLimit: Number(g('sub').value), ideRateLimit: Number(g('ide').value),
+        corsOrigins: g('origins').value, emailFrom: g('mailfrom').value
+      }
+    });
+    alert(rr.ok ? '配置已保存并热生效' : rr.error);
+  };
+};
+
+// load active tab
+document.querySelector('#tabs button:not(.secondary)').click();
+</script>
+</body>
+</html>

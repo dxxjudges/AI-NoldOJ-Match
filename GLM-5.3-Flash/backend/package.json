@@ -1,0 +1,19 @@
+{
+  "name": "noldoj-backend",
+  "version": "1.0.0",
+  "description": "NoldOJ Online Judge backend (Windows native sandbox)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node test/run-all.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.4.0",
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

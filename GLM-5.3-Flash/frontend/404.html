@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoldOJ - 在线评测系统</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>
+// theme init before paint to prevent flicker
+(function(){ try { var t = localStorage.getItem('noldoj-theme'); if (t === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+</script>
+</head>
+<body data-page="404">
+<div id="app">
+  <nav id="navbar" class="navbar"><div class="nav-inner">
+    <a href="/" class="brand">NoldOJ</a>
+    <div class="nav-links" id="nav-links"></div>
+    <div class="nav-right" id="nav-right"></div>
+  </div></nav>
+  <main class="container">
+    <div class="card center-card">
+      <h1>404</h1>
+      <p>页面不存在</p>
+      <a class="btn" href="/">返回首页</a>
+    </div>
+  </main>
+  <footer class="footer">NoldOJ · MIT License · 本地部署评测环境，请勿公网暴露</footer>
+</div>
+<script src="/static/app.js"></script>
+<script>if (window.NoldOJ) NoldOJ.renderNav();</script>
+</body>
+</html>

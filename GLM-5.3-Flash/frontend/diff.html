@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Diff 比较 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2>代码 Diff 比较</h2>
+    <p class="muted">同一用户同一题目的两次提交对比；新增行绿色、删除行红色、修改行黄色高亮，左右双栏并排。</p>
+    <div class="form-row">
+      <div><label>题目 ID</label><input id="problemId" value=""></div>
+      <div><label>提交 A</label><input id="idA" placeholder="提交记录号"></div>
+      <div><label>提交 B</label><input id="idB" placeholder="提交记录号"></div>
+    </div>
+    <button class="btn mt" id="load-btn">加载并对比</button>
+    <div id="my-subs" class="mt"></div>
+  </div>
+  <div class="card hidden" id="result"></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+document.getElementById('problemId').value = NoldOJ.qs('problemId') || '';
+
+async function loadMySubs() {
+  const pid = Number(document.getElementById('problemId').value);
+  if (!pid || !NoldOJ.user()) return;
+  const r = await NoldOJ.api('/submissions?mine=1&problemId=' + pid + '&pageSize=50');
+  if (r.ok && r.data.items.length) {
+    document.getElementById('my-subs').innerHTML = '<div class="muted">我在这道题的提交：</div>' +
+      r.data.items.map(s => '<a class="btn small secondary" style="margin:2px" href="#" data-sid="' + s.id + '">#' + s.id + ' ' + s.status + '</a>').join(' ');
+    document.querySelectorAll('#my-subs a').forEach(a => a.onclick = e => {
+      e.preventDefault();
+      const A = document.getElementById('idA'), B = document.getElementById('idB');
+      if (A.value) { B.value = A.value; A.value = a.dataset.sid; B.value = a.dataset.sid; /* replace logic */ }
+      if (!A.value) A.value = a.dataset.sid; else B.value = a.dataset.sid;
+    });
+  }
+}
+
+document.getElementById('load-btn').onclick = async () => {
+  const a = document.getElementById('idA').value, b = document.getElementById('idB').value;
+  const r = await NoldOJ.api('/submissions/' + a + '/diff/' + b);
+  const res = document.getElementById('result');
+  if (!r.ok) { res.classList.remove('hidden'); res.innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>'; return; }
+  res.classList.remove('hidden');
+  res.innerHTML = '<h3>提交 A #' + a + '(' + r.data.a.status + ') ↔ 提交 B #' + b + '(' + r.data.b.status + ')</h3>' + NoldOJ.diffHtml(r.data.a.code || '', r.data.b.code || '');
+};
+document.getElementById('problemId').addEventListener('input', loadMySubs);
+loadMySubs();
+</script>
+</body>
+</html>

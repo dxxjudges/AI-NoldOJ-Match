@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>比赛详情 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div id="info"></div>
+  <div class="card" id="board" style="overflow-x:auto">加载中...</div>
+  <div class="card hidden" id="virtual-view"></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const CID = Number(NoldOJ.qs('id')) || 1;
+let data = null;
+let isTeacher = false;
+
+async function load() {
+  const r = await NoldOJ.api('/contests/' + CID);
+  if (!r.ok) { document.getElementById('info').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>'; return; }
+  const c = r.data.contest;
+  data = r.data;
+  isTeacher = NoldOJ.user() && ['teacher','admin','super'].includes(NoldOJ.user().role);
+  const stateText = { notstarted: '未开始', running: '进行中', ended: '已结束' }[c.state];
+  document.getElementById('info').innerHTML =
+    '<div class="card"><div class="flex spread"><div><h2 style="margin:0">' + NoldOJ.escapeHtml(c.title) +
+    ' <span class="tag-pill" style="background:var(--primary)">' + stateText + '</span></h2></div><div class="flex">' +
+    (r.data.invited && !r.data.joined && c.state === 'running' ? '<button class="btn" id="join-btn">加入比赛</button>' : '') +
+    (r.data.joined && c.state === 'running' ? '<span class="tag-pill" style="background:var(--green)">已参赛</span>' : '') +
+    (c.state === 'ended' && !r.data.virtual ? '<button class="btn secondary" id="virtual-btn">虚拟参加</button>' : '') +
+    (isTeacher ? '<button class="btn secondary" id="plag-btn">一键查重</button>' : '') +
+    '</div></div>' +
+    '<div class="muted mt">' + new Date(c.start_time).toLocaleString('zh-CN') + ' ~ ' + new Date(c.end_time).toLocaleString('zh-CN') +
+    (c.freeze_minutes ? ' ｜ 榜前 ' + c.freeze_minutes + ' 分钟冻结' : '') + '</div>' +
+    '<div id="c-desc"></div>' +
+    '<h3 class="mt">题目</h3><table class="data"><tbody>' +
+    r.data.problems.map((p, i) => '<tr><td style="width:40px"><strong>' + String.fromCharCode(65 + i) + '</strong></td>' +
+      '<td><a href="/problem.html?id=' + p.id + '&' + (c.state === 'running' ? '' : '') + '">' + NoldOJ.escapeHtml(p.alias || p.title) + '</a></td>' +
+      '<td>' + NoldOJ.diffBadge(p.difficulty) + '</td>' +
+      '<td style="width:120px"><a class="btn small secondary" href="/submit.html?problemId=' + p.id + '&contestId=' + CID + '">提交</a></td></tr>').join('') +
+    '</tbody></table></div>';
+  NoldOJ.renderMd(document.getElementById('c-desc'), c.description_md || '');
+  const jb = document.getElementById('join-btn');
+  if (jb) jb.onclick = async () => { const rr = await NoldOJ.api('/contests/' + CID + '/join', { method: 'POST' }); if (rr.ok) load(); else alert(rr.error); };
+  const vb = document.getElementById('virtual-btn');
+  if (vb) vb.onclick = async () => {
+    const rr = await NoldOJ.api('/contests/' + CID + '/virtual', { method: 'POST' });
+    if (rr.ok) location.href = '/virtual.html?id=' + rr.data.virtualId; else alert(rr.error);
+  };
+  const pb = document.getElementById('plag-btn');
+  if (pb) pb.onclick = async () => {
+    const rr = await NoldOJ.api('/plagiarism/start', { method: 'POST', body: { contestId: CID } });
+    if (rr.ok) alert('查重已启动，报告ID ' + rr.data.reportId); else alert(rr.error);
+  };
+  loadBoard();
+}
+async function loadBoard() {
+  const r = await NoldOJ.api('/contests/' + CID + '/leaderboard');
+  if (!r.ok) { document.getElementById('board').innerHTML = NoldOJ.escapeHtml(r.error); return; }
+  let inner = '<h3 style="margin-top:0">排行榜</h3><table class="data"><thead><tr><th>排名</th><th>用户</th><th>总分</th><th>罚时</th>' +
+    probs.map((p, i) => '<th>' + String.fromCharCode(65 + i) + '</th>').join('') + '</tr></thead><tbody>' +
+    rows.map(row => '<tr><td>' + (medal[row.medal] || (rows.indexOf(row) + 1)) + '</td>' +
+      '<td><a href="/profile.html?id=' + row.userId + '">' + NoldOJ.escapeHtml(row.username) + '</a></td>' +
+      '<td><strong>' + row.total + '</strong></td><td>' + Math.floor(row.penalty / 60) + ':' + String(row.penalty % 60).padStart(2, '0') + '</td>' +
+      probs.map(p => {
+        const e = row.perProblem[p.problem_id] || {};
+        return '<td>' + (e.solved ? '✔ ' + e.score : (e.tries ? '✘ ' + e.tries : '·')) + '</td>';
+      }).join('') + '</tr>').join('') + '</tbody></table>';
+  if (r.data.frozen) inner = '<div class="notice warn">🧊 榜单已冻结。实时排名已暂停，最终排名将在管理员解冻后公布。</div>' + inner;
+  document.getElementById('board').innerHTML = inner;
+  NoldOJ.onLeaderboardUpdate(m => { if (m.type === 'leaderboard:update') loadBoard(); });
+}
+load();
+setInterval(loadBoard, 30000);
+</script>
+</body>
+</html>

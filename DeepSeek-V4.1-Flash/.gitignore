@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Runtime data / user generated content
+data/
+uploads/
+tmp/
+testdata/*
+!testdata/.gitkeep
+sandbox-work/
+logs/
+*.log
+
+# Generated config (keep example)
+config/config.json
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Test artifacts
+coverage/
+backend/test/tmp/

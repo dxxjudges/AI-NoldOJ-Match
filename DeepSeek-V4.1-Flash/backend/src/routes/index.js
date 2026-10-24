@@ -1,0 +1,42 @@
+import registerAuth from './auth.js';
+import registerUsers from './users.js';
+import registerLanguages from './languages.js';
+import registerTags from './tags.js';
+import registerProblems from './problems.js';
+import registerSubmissions from './submissions.js';
+import registerIde from './ide.js';
+import registerContests from './contests.js';
+import registerArticles from './articles.js';
+import registerFiles from './files.js';
+import registerAnnouncements from './announcements.js';
+import registerProblemSets from './problemsets.js';
+import registerDiscussions from './discussions.js';
+import registerPlagiarism from './plagiarism.js';
+import registerExams from './exams.js';
+import registerGroups from './groups.js';
+import registerAi from './ai.js';
+import registerStats from './stats.js';
+import registerSearch from './search.js';
+
+export default function registerRoutes(router) {
+  registerAuth(router);
+  registerUsers(router);
+  registerLanguages(router);
+  registerTags(router);
+  registerProblems(router);
+  registerSubmissions(router);
+  registerIde(router);
+  registerContests(router);
+  registerArticles(router);
+  registerFiles(router);
+  registerAnnouncements(router);
+  registerProblemSets(router);
+  registerDiscussions(router);
+  registerPlagiarism(router);
+  registerExams(router);
+  registerGroups(router);
+  registerAi(router);
+  registerStats(router);
+  registerSearch(router);
+  router.get('/api/health', (ctx) => ctx.json({ ok: true, data: { status: 'healthy', time: new Date().toISOString() } }));
+}

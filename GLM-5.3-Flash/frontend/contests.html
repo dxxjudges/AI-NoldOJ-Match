@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>比赛 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card flex spread">
+    <h2 style="margin:0">比赛</h2>
+    <button class="btn hidden" id="create-btn" onclick="location.href='/admin.html#contests'">创建比赛</button>
+  </div>
+  <div class="card">
+    <table class="data">
+      <thead><tr><th>ID</th><th>比赛</th><th>状态</th><th>开始时间</th><th>结束时间</th><th>题数</th><th></th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="7" class="muted">加载中...</td></tr></tbody>
+    </table>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const STATE_LABEL = { notstarted: ['未开始', 'st-pending'], running: ['进行中', 'st-ac'], ended: ['已结束', 'st-pc'] };
+(async function () {
+  if (NoldOJ.user() && NoldOJ.user().role !== 'user') document.getElementById('create-btn').classList.remove('hidden');
+  const r = await NoldOJ.api('/contests');
+  if (!r.ok) return;
+  document.getElementById('tbody').innerHTML = r.data.items.length ? r.data.items.map(c => {
+    const [label, cls] = STATE_LABEL[c.state] || ['', ''];
+    return '<tr><td>' + c.id + '</td>' +
+      '<td><a href="/contest.html?id=' + c.id + '">' + NoldOJ.escapeHtml(c.title) + '</a></td>' +
+      '<td><span class="status ' + cls + '">' + label + '</span></td>' +
+      '<td>' + new Date(c.start_time).toLocaleString('zh-CN') + '</td>' +
+      '<td>' + new Date(c.end_time).toLocaleString('zh-CN') + '</td>' +
+      '<td>' + c.problem_count + '</td>' +
+      '<td></td></tr>';
+  }).join('') : '<tr><td colspan="7" class="muted">暂无比赛，教师可在管理面板创建。</td></tr>';
+})();
+</script>
+</body>
+</html>

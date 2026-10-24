@@ -1,0 +1,81 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  },
+  "core": {
+    "jwtSecret": "",
+    "databasePath": "backend/data/NoldOJ.db",
+    "sandboxWorkDir": "backend/data/sandbox",
+    "testdataDir": "testdata",
+    "uploadsDir": "uploads",
+    "loginRateLimit": 10,
+    "registerRateLimit": 1,
+    "submissionRateLimit": 30,
+    "ideRateLimit": 30,
+    "codeMaxLength": 131072,
+    "registrationOpen": true
+  },
+  "judge": {
+    "concurrency": 2,
+    "ideRunTimeout": 15000,
+    "useSandbox": true
+  },
+  "ai": {
+    "securityReview": {
+      "enabled": false,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": "",
+      "timeoutMs": 60000
+    },
+    "hint": {
+      "enabled": true,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": "",
+      "cooldownSeconds": 60,
+      "maxLen": 300
+    },
+    "testdata": {
+      "enabled": true,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": ""
+    },
+    "examGrade": {
+      "enabled": true,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": ""
+    }
+  },
+  "email": {
+    "enabled": false,
+    "from": "NoldOJ <noreply@noldoj.local>",
+    "smtpHost": "",
+    "smtpPort": 587,
+    "smtpUser": "",
+    "smtpPass": ""
+  },
+  "cors": {
+    "enabled": true,
+    "origins": ["http://localhost:3000", "http://127.0.0.1:3000"]
+  },
+  "captcha": {
+    "enabled": true,
+    "expireSeconds": 300,
+    "length": 4
+  },
+  "file": {
+    "maxSizeMb": 10,
+    "quotaGb": 2
+  },
+  "rating": {
+    "acNewBase": 80,
+    "acDifficultyBonus": 20,
+    "acRepeatBase": 5,
+    "cePenalty": 5,
+    "compileOnlyPenalty": 2
+  }
+}

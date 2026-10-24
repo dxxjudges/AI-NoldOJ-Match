@@ -1,0 +1,74 @@
+{
+  "core": {
+    "port": 8080,
+    "host": "0.0.0.0",
+    "jwtSecret": "",
+    "dbPath": "data/NoldOJ.db",
+    "sandboxWorkDir": "sandbox-work",
+    "uploadsDir": "uploads",
+    "testdataDir": "testdata",
+    "frontendDir": "frontend",
+    "accessTokenTtlSeconds": 1800,
+    "refreshTokenTtlSeconds": 604800,
+    "codeMaxBytes": 131072,
+    "allowRegistration": true,
+    "registrationPerIpPerHour": 1,
+    "defaultUserQuotaBytes": 2147483648,
+    "logLevel": "info"
+  },
+  "rateLimit": {
+    "submit": { "windowMs": 60000, "max": 5 },
+    "ide": { "windowMs": 60000, "max": 10 },
+    "login": { "windowMs": 300000, "max": 10 }
+  },
+  "judge": {
+    "concurrency": 2,
+    "queueMaxLength": 200
+  },
+  "captcha": {
+    "enabled": true,
+    "ttlSeconds": 300
+  },
+  "cors": {
+    "enabled": false,
+    "origins": ["http://localhost:8080"]
+  },
+  "ai": {
+    "security": {
+      "enabled": false,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": "",
+      "timeoutMs": 60000
+    },
+    "hint": {
+      "enabled": false,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": "",
+      "cooldownSeconds": 60,
+      "minFailures": 2,
+      "maxChars": 300
+    },
+    "testdata": {
+      "enabled": false,
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "qwen3:1.7b",
+      "apiKey": ""
+    }
+  },
+  "email": {
+    "enabled": false,
+    "host": "",
+    "port": 465,
+    "secure": true,
+    "user": "",
+    "pass": "",
+    "from": "NoldOJ <noreply@example.com>"
+  },
+  "plagiarism": {
+    "highThreshold": 0.85,
+    "suspectThreshold": 0.7,
+    "minTokenLength": 40
+  }
+}

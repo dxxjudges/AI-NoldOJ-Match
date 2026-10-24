@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Rating 排名 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2>Rating 排名</h2>
+    <table class="data">
+      <thead><tr><th style="width:60px">排名</th><th>用户</th><th>段位</th><th>Rating</th><th>签名</th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="5" class="muted">加载中...</td></tr></tbody>
+    </table>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+(async function () {
+  const r = await NoldOJ.api('/rating/leaderboard');
+  if (!r.ok) return;
+  const medal = { 1: '🥇', 2: '🥈', 3: '🥉' };
+  document.getElementById('tbody').innerHTML = r.data.items.map(u =>
+    '<tr><td>' + (medal[u.medal] || u.rank) + '</td>' +
+    '<td><a href="/profile.html?id=' + u.id + '">' + NoldOJ.escapeHtml(u.username) + '</a></td>' +
+    '<td><span class="tag-pill" style="background:var(--primary)">' + NoldOJ.escapeHtml(u.title) + '</span></td>' +
+    '<td><strong>' + u.rating + '</strong></td>' +
+    '<td class="muted">' + NoldOJ.escapeHtml(u.signature || '') + '</td></tr>').join('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>公告 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card"><h2>公告</h2><div id="list" class="muted">加载中...</div></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+(async function () {
+  const r = await NoldOJ.api('/announcements');
+  if (!r.ok) return;
+  document.getElementById('list').innerHTML = r.data.items.length ? r.data.items.map(a =>
+    '<div class="mb"><a href="/announcement.html?id=' + a.id + '"><strong>' + (a.pinned ? '📌 ' : '') + NoldOJ.escapeHtml(a.title) + '</strong></a>' +
+    '<span class="muted"> · ' + NoldOJ.escapeHtml(a.username || '') + ' · ' + NoldOJ.timeAgo(a.created_at) + '</span></div>').join('') : '暂无公告';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Runtime data & secrets
+backend/data/
+config/config.json
+*.db
+*.db-wal
+*.db-shm
+
+# Temporary files (judge workspaces, compile artifacts)
+tmp/
+*.tmp
+
+# Uploads & logs
+uploads/
+logs/
+testdata/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log

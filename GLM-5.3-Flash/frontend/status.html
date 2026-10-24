@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>提交记录 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <div class="flex spread">
+      <h2 style="margin:0">提交记录</h2>
+      <div class="flex">
+        <select id="f-status" style="width:auto">
+          <option value="">全部状态</option><option>pending</option><option>judging</option>
+          <option>ac</option><option>wa</option><option>tle</option><option>mle</option><option>re</option><option>ce</option><option>pc</option><option>se</option>
+        </select>
+        <input id="f-user" class="search-box" placeholder="用户名筛选" style="width:150px">
+        <input id="f-problem" placeholder="题目ID" style="width:80px">
+        <button class="btn small secondary" id="f-mine">只看我的</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <table class="data">
+      <thead><tr><th>#</th><th>题目</th><th>提交者</th><th>状态</th><th>用例</th><th>分数</th><th>耗时</th><th>内存</th><th>语言</th><th>时间</th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="10" class="muted">加载中...</td></tr></tbody>
+    </table>
+    <div class="pagination" id="pager"></div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+let state = { page: 1, status: '', user: '', problem: '', mine: false };
+
+async function load() {
+  const p = new URLSearchParams({ page: state.page, pageSize: 30 });
+  if (state.status) p.set('status', state.status);
+  if (state.user) p.set('userId', state.user);
+  if (state.problem) p.set('problemId', state.problem);
+  if (state.mine) p.set('mine', '1');
+  const r = await NoldOJ.api('/submissions?' + p.toString());
+  if (!r.ok) return;
+  document.getElementById('tbody').innerHTML = r.data.items.length ? r.data.items.map(s =>
+    '<tr><td><a href="/status-detail.html?id=' + s.id + '">#' + s.id + '</a></td>' +
+    '<td><a href="/problem.html?id=' + s.problem_id + '">' + s.problem_id + '. ' + NoldOJ.escapeHtml(s.problem_title) + '</a></td>' +
+    '<td><a href="/profile.html?id=' + s.user_id + '">' + NoldOJ.escapeHtml(s.username) + '</a></td>' +
+    '<td>' + NoldOJ.statusHtml(s.status) + '</td>' +
+    '<td>' + (s.case_total ? s.case_passed + '/' + s.case_total : '-') + '</td>' +
+    '<td>' + s.score + '</td><td>' + s.time_ms + 'ms</td><td>' + NoldOJ.fmtMem(s.memory_kb) + '</td>' +
+    '<td>' + NoldOJ.escapeHtml(s.language_name || '') + '</td>' +
+    '<td class="muted">' + NoldOJ.timeAgo(s.created_at) + '</td></tr>').join('')
+    : '<tr><td colspan="10" class="muted">暂无记录</td></tr>';
+  const pages = Math.ceil(r.data.total / 30);
+  document.getElementById('pager').innerHTML = pages > 1
+    ? [...Array(pages).keys()].slice(Math.max(0, state.page - 4), state.page + 3).map(i =>
+      '<button class="btn small ' + (i + 1 === state.page ? '' : 'secondary') + '" data-p="' + (i + 1) + '">' + (i + 1) + '</button>').join('')
+    : '';
+  document.querySelectorAll('#pager button').forEach(b => b.onclick = () => { state.page = Number(b.dataset.p); load(); });
+}
+
+document.getElementById('f-status').onchange = e => { state.status = e.target.value; state.page = 1; load(); };
+document.getElementById('f-problem').oninput = e => { state.problem = e.target.value; state.page = 1; clearTimeout(window.__t); window.__t = setTimeout(load, 300); };
+document.getElementById('f-mine').onclick = function () {
+  state.mine = !state.mine;
+  this.classList.toggle('secondary', !state.mine);
+  load();
+};
+window.__userCache = null;
+document.getElementById('f-user').oninput = async e => {
+  state.user = e.target.value; state.page = 1;
+  clearTimeout(window.__t2); window.__t2 = setTimeout(load, 300);
+};
+NoldOJ.onSubUpdate(p => {
+  // live refresh current page when a pending item updates
+  const span = document.querySelector('a[href="/status-detail.html?id=' + p.id + '"]');
+  if (span) load();
+});
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>虚拟参赛 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2 style="margin:0">比赛 <span id="c-title"></span> <span class="tag-pill" style="background:var(--primary)">虚拟参赛</span></h2>
+    <div class="flex mt"><div class="stat-box" style="flex:1"><div class="n" id="t-remain">--:--:--</div><div class="t">剩余时间（服务端计时，关闭浏览器不停）</div></div></div>
+    <h3 class="mt">题目</h3>
+    <div id="probs"></div>
+  </div>
+  <div class="card" id="my-board"></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const VID = Number(NoldOJ.qs('id')) || 1;
+let timerId = setInterval(refresh, 1000);
+async function refresh() {
+  const r = await NoldOJ.api('/virtual/' + VID);
+  if (!r.ok) { clearInterval(timerId); document.querySelector('main').innerHTML = r.error; return; }
+  const d = r.data;
+  document.title = '虚拟参赛 - ' + d.contest.title;
+  document.getElementById('c-title').textContent = d.contest.title;
+  const s = Math.max(0, Math.floor(d.remainingMs / 1000));
+  document.getElementById('t-remain').textContent =
+    String(Math.floor(s / 3600)).padStart(2, '0') + ':' + String(Math.floor(s % 3600 / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  document.getElementById('probs').innerHTML = d.problems.map((p, i) =>
+    '<div class="flex spread mb"><a href="/problem.html?id=' + p.problem_id + '"><strong>' + String.fromCharCode(65 + i) + '</strong> ' + NoldOJ.escapeHtml(p.alias || p.title) + '</a> ' +
+    '<a class="btn small secondary" href="/submit.html?problemId=' + p.problem_id + '&virtualId=' + VID + '&problemId=' + p.problem_id + '">提交</a></div>').join('');
+  const medal = { 1: '🥇', 2: '🥈', 3: '🥉' };
+  document.getElementById('my-board').innerHTML = '<h3 style="margin-top:0">我的虚拟榜单</h3>' +
+    '<div class="flex"><div class="stat-box"><div class="n">' + d.total + '</div><div class="t">总分</div></div>' +
+    '<div class="stat-box"><div class="n">' + Math.floor(d.penalty / 60) + '分</div><div class="t">罚时</div></div>' +
+    '<div class="stat-box"><div class="n">' + (d.ended ? '已结束' : '进行中') + '</div><div class="t">状态</div></div></div>' +
+    '<table class="data mt"><thead><tr><th>题</th><th>状态</th><th>得分</th><th>用时</th></tr></thead><tbody>' +
+    d.problems.map((p, i) => {
+      const e = d.byProblem[p.problem_id] || {};
+      return '<tr><td>' + String.fromCharCode(65 + i) + '</td>' +
+        '<td>' + (e.solved ? '<span class="st-ac">✔</span>' : '·') + '</td><td>' + (e.score || 0) + '</td>' +
+        '<td>' + (e.at ? Math.floor(e.at / 60) + '分' + e.at % 60 + '秒' : '-') + '</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+</script>
+</body>
+</html>

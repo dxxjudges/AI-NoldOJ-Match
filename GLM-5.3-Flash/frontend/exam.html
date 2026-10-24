@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>测验答题 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="flex spread card"><h2 id="title" style="margin:0">测验</h2><span id="timer" class="status"></span></div>
+  <div class="card" id="questions"><div class="muted">加载中...</div></div>
+  <button class="btn" id="submit-btn" style="width:100%">提交答卷</button>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const EID = Number(NoldOJ.qs('id')) || 1;
+let attemptId = null, exam = null;
+let answers = {};
+(async function () {
+  if (!NoldOJ.user()) { location.href = '/login.html'; return; }
+  const r = await NoldOJ.api('/exams/' + EID);
+  if (!r.ok) { document.getElementById('questions').innerHTML = r.error; return; }
+  exam = r.data.exam;
+  document.getElementById('title').textContent = exam.title;
+  const started = r.data.attempts.find(a => !a.submitted_at);
+  if (started) attemptId = started.id;
+  renderQs(r.data.questions);
+  if (attemptId) startTimer();
+})();
+
+function renderQs(list) {
+  const TYPES = { choice: '单选', judge: '判断', blank: '填空', essay: '简答' };
+  document.getElementById('questions').innerHTML = list.map((q, i) => {
+    let body = '';
+    let options = [];
+    try { options = JSON.parse(q.options_json || '[]'); } catch (e) { }
+    if (q.type === 'choice') body = options.map((o, oi) =>
+      '<label class="mt"><input type="' + (String(q.answer || '').includes(',') ? 'checkbox' : 'radio') + '" name="q' + q.id + '" value="' + oi + '"> ' + NoldOJ.escapeHtml(o) + '</label>').join('');
+    else if (q.type === 'judge') body = '<label class="mt"><input type="radio" name="q' + q.id + '" value="true"> 正确</label><label><input type="radio" name="q' + q.id + '" value="false"> 错误</label>';
+    else body = '<textarea id="a' + q.id + '" placeholder="输入答案"></textarea>';
+    return '<h3>第 ' + (i + 1) + ' 题（' + TYPES[q.type] + '，' + q.score + ' 分）</h3>' + '<div>' + NoldOJ.renderMd(document.createElement('div'), q.content_md || '') + '</div>'.slice(8) + body;
+  }).join('<hr style="border:none;border-top:1px solid var(--border)">');
+  // collect
+  document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(inp => inp.onchange = () => {
+    const qid = inp.name.slice(1);
+    if (inp.type === 'checkbox') {
+      const set = new Set(answers[qid] || []);
+      inp.checked ? set.add(inp.value) : set.delete(inp.value);
+      answers[qid] = [...set];
+    } else answers[qid] = inp.value;
+  });
+  document.querySelectorAll('textarea').forEach(t => t.oninput = () => {
+    const qid = t.id.slice(1);
+    answers[qid] = t.value;
+  });
+}
+
+function startTimer() {
+  setInterval(async () => {
+    const r = await NoldOJ.api('/exams/' + EID);
+    if (r.ok) {
+      const remain = exam.time_limit_min * 60 + new Date(NoldOJ.user() ? 0 : 0).getSeconds();
+      // server-side started_at based
+      const a = r.data.attempts.find(x => x.id === attemptId);
+      if (a) {
+        const left = exam.time_limit_min * 60000 - (Date.now() - a.started_at);
+        if (left <= 0) { document.getElementById('timer').textContent = '时间到'; submit(true); }
+        else document.getElementById('timer').textContent = '剩余 ' + Math.floor(left / 60000) + ':' + String(Math.floor(left % 60000 / 1000)).padStart(2, '0');
+      }
+    }
+  }, 1000);
+}
+
+document.getElementById('submit-btn').onclick = () => submit(false);
+async function submit(auto) {
+  if (!auto && !confirm('确认提交答卷？提交后不能再修改。')) return;
+  if (!attemptId) {
+    const rr = await NoldOJ.api('/exams/' + EID + '/attempt', { method: 'POST' });
+    if (!rr.ok) { alert(rr.error); return; }
+    attemptId = rr.data.attemptId;
+  }
+  // convert numeric option indices to text values
+  const payload = {};
+  const r2 = await NoldOJ.api('/exams/' + EID);
+  if (r2.ok) {
+    for (const q of r2.data.questions) {
+      if (q.type === 'choice') {
+        let v = answers[q.id];
+        if (Array.isArray(v)) payload[q.id] = v.map(i => (JSON.parse(q.options_json || '[]')[i] || '')).join(',');
+        else payload[q.id] = v !== undefined ? String((JSON.parse(q.options_json || '[]')[v]) || v) : '';
+      } else payload[q.id] = answers[q.id] !== undefined ? answers[q.id] : (q.type === 'judge' ? (answers[q.id] = '') : '');
+    }
+  }
+  const r3 = await NoldOJ.api('/exam-attempts/' + attemptId + '/submit', { method: 'POST', body: { answers: payload } });
+  if (r3.ok) { alert('提交成功，等待评分'); location.href = '/exams.html'; }
+  else alert(r3.error);
+}
+</script>
+</body>
+</html>

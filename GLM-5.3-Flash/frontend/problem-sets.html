@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>训练计划 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2>题单训练计划</h2>
+    <div id="list" class="muted">加载中...</div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+(async function () {
+  const r = await NoldOJ.api('/problem-sets');
+  if (!r.ok) { document.getElementById('list').innerHTML = r.error; return; }
+  document.getElementById('list').innerHTML = r.data.items.length ? r.data.items.map(s =>
+    '<div class="mb"><a href="/problem-set.html?id=' + s.id + '"><strong>' + NoldOJ.escapeHtml(s.title) + '</strong></a>' +
+    (s.is_public ? '' : ' <span class="tag-pill" style="background:#888">私有</span>') +
+    '<span class="muted"> · ' + s.problem_count + ' 道题目</span></div>').join('') : '暂无训练计划';
+})();
+</script>
+</body>
+</html>

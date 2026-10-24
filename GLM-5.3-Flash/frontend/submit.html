@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>提交 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2>提交代码</h2>
+    <div id="msg"></div>
+    <label>题目</label>
+    <select id="problem"></select>
+    <label>语言</label>
+    <select id="lang"></select>
+    <label>代码</label>
+    <textarea id="code" class="mono" style="min-height:320px;font-size:13px" spellcheck="false"></textarea>
+    <button class="btn mt" id="submit-btn" style="width:100%">提交评测</button>
+    <div id="result" class="mt"></div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+if (!NoldOJ.user()) { location.href = '/login.html'; }
+const PID = NoldOJ.qs('problemId'), CID = NoldOJ.qs('contestId'), VID = NoldOJ.qs('virtualId');
+(async function () {
+  const pr = await NoldOJ.api('/problems?pageSize=200');
+  if (pr.ok) {
+    document.getElementById('problem').innerHTML = pr.data.items.map(p =>
+      '<option value="' + p.id + '"' + (PID == p.id ? ' selected' : '') + '>' + p.id + '. ' + NoldOJ.escapeHtml(p.title) + '</option>').join('');
+  }
+  const lr = await NoldOJ.api('/languages');
+  if (lr.ok) {
+    document.getElementById('lang').innerHTML = lr.data.items.filter(l => l.enabled).map(l =>
+      '<option value="' + l.id + '"' + (NoldOJ.user().preferredLang == l.id ? ' selected' : '') + '>' + NoldOJ.escapeHtml(l.name) + '</option>').join('');
+  }
+})();
+document.getElementById('submit-btn').onclick = async function () {
+  this.disabled = true; this.textContent = '提交中...';
+  const body = { problemId: Number(document.getElementById('problem').value), languageId: Number(document.getElementById('lang').value), code: document.getElementById('code').value };
+  if (CID) body.contestId = Number(CID);
+  if (VID) body.virtualId = Number(VID);
+  const r = await NoldOJ.api('/submissions', { method: 'POST', body });
+  this.disabled = false; this.textContent = '提交评测';
+  if (r.ok) {
+    document.getElementById('result').innerHTML = '<div class="notice info">提交成功 <a href="/status-detail.html?id=' + r.data.id + '">#' + r.data.id + '</a>: <span class="st-judging">评测中</span> <a href="/status.html">查看全部</a></div>';
+    NoldOJ.onSubUpdate(p => { if (p.id === r.data.id) { const s = document.querySelector('#result .st-judging'); if (s) s.outerHTML = NoldOJ.statusHtml(p.status); } });
+  } else {
+    document.getElementById('msg').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>';
+  }
+};
+</script>
+</body>
+</html>

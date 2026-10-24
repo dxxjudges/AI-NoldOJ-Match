@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>测验 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card"><h2>测验</h2><div id="list" class="muted">加载中...</div></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+(async function () {
+  const r = await NoldOJ.api('/exams');
+  if (!r.ok) return;
+  document.getElementById('list').innerHTML = r.data.items.length ? r.data.items.map(e => {
+    const label = { notstarted: '未开始', running: '进行中', ended: '已结束' }[e.state];
+    return '<div class="mb"><a href="/exam.html?id=' + e.id + '"><strong>' + NoldOJ.escapeHtml(e.title) + '</strong></a>' +
+      ' <span class="tag-pill" style="background:var(--primary)">' + label + '</span>' +
+      '<span class="muted"> · ' + e.question_count + ' 题 · 时限 ' + e.time_limit_min + ' 分钟 · 满分 ' + e.pass_score + '</span></div>';
+  }).join('') : '暂无测验';
+})();
+</script>
+</body>
+</html>

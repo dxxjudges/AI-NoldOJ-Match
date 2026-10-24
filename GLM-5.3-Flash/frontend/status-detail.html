@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>评测详情 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card" id="head">加载中...</div>
+  <div class="card" id="err"></div>
+  <div class="card" id="compile-out"></div>
+  <div class="card" id="cases"></div>
+  <div class="card" id="code"></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+const SID = Number(NoldOJ.qs('id')) || 1;
+async function load() {
+  const r = await NoldOJ.api('/submissions/' + SID);
+  if (!r.ok) { document.getElementById('head').innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>'; return; }
+  const s = r.data.submission;
+  document.title = '#' + s.id + ' 评测详情 - NoldOJ';
+  let teacherBtns = '';
+  if (r.data.showCode && NoldOJ.user() && ['teacher','admin','super'].includes(NoldOJ.user().role)) {
+    teacherBtns = ' <button class="btn small secondary" id="rejudge-btn">重新评测</button> <button class="btn small danger" id="del-btn">删除记录</button>';
+  }
+  document.getElementById('head').innerHTML =
+    '<div class="flex spread"><div class="flex"><h2 style="margin:0">#' + s.id + ' ' + NoldOJ.statusHtml(s.status) + '</h2>' +
+    '<span class="muted">' + s.problem_id + '. <a href="/problem.html?id=' + s.problem_id + '">' + NoldOJ.escapeHtml(s.problem_title) + '</a></span></div>' +
+    '<div class="flex"><a href="/profile.html?id=' + s.user_id + '">' + NoldOJ.escapeHtml(s.username) + '</a>' +
+    ' <span class="muted">' + NoldOJ.escapeHtml(s.language_name || '') + ' · ' + NoldOJ.timeAgo(s.created_at) + '</span>' + teacherBtns + '</div></div>' +
+    '<div class="flex mt"><div class="stat-box"><div class="n">' + s.time_ms + 'ms</div><div class="t">最大耗时</div></div>' +
+    '<div class="stat-box"><div class="n">' + NoldOJ.fmtMem(s.memory_kb) + '</div><div class="t">峰值内存</div></div>' +
+    '<div class="stat-box"><div class="n">' + s.score + '</div><div class="t">得分</div></div>' +
+    '<div class="stat-box"><div class="n">' + s.case_passed + '/' + s.case_total + '</div><div class="t">通过用例</div></div></div>';
+  const rb = document.getElementById('rejudge-btn');
+  if (rb) rb.onclick = async () => { const rr = await NoldOJ.api('/submissions/' + SID + '/rejudge', { method: 'POST' }); if (rr.ok) { load(); } };
+  const db = document.getElementById('del-btn');
+  if (db) db.onclick = async () => { if (!confirm('确认删除该提交记录？')) return; const rr = await NoldOJ.api('/submissions/' + SID, { method: 'DELETE' }); if (rr.ok) location.href = '/status.html'; else alert(rr.error); };
+
+  document.getElementById(errKey(s.status)).innerHTML = s.error_msg ? '<div class="notice error"><strong>错误信息：</strong>' + NoldOJ.escapeHtml(s.error_msg) + '</div>' : '';
+  document.getElementById('compile-out').innerHTML = s.compile_output ? '<h3>编译输出</h3><pre>' + NoldOJ.escapeHtml(s.compile_output) + '</pre>' : '';
+
+  document.getElementById('cases').innerHTML = r.data.cases.length ?
+    '<h3>测试用例</h3><table class="data"><thead><tr><th>#</th><th>状态</th><th>得分</th><th>耗时</th><th>内存</th><th>信息</th></tr></thead><tbody>' +
+    r.data.cases.map((c, i) => '<tr><td>' + (i + 1) + '</td><td>' + NoldOJ.statusHtml(c.status) + '</td><td>' + c.score +
+      '</td><td>' + c.time_ms + 'ms</td><td>' + NoldOJ.fmtMem(c.memory_kb) + '</td><td class="muted">' + NoldOJ.escapeHtml(c.msg || '') + '</td></tr>').join('') +
+    '</tbody></table>' : '';
+
+  if (r.data.showCode) {
+    const files = r.data.submission.code_files_meta || [];
+    document.getElementById('code').innerHTML = '<h3>源代码</h3>' + (files.length ?
+      files.map(f => '<div class="muted mono mb">📎 ' + NoldOJ.escapeHtml(f.name) + ' (' + NoldOJ.fmtBytes(f.size) + ')</div>').join('') : '') +
+      '<div class="code-box"><button class="btn small secondary copy-btn">复制</button><pre>' + NoldOJ.escapeHtml(s.code || '') + '</pre></div>';
+    document.querySelector('#code .copy-btn').onclick = function () {
+      navigator.clipboard.writeText(s.code || '').then(() => { this.textContent = '已复制'; setTimeout(() => this.textContent = '复制', 1000); });
+    };
+  } else document.getElementById('code').remove();
+
+  NoldOJ.onSubUpdate(p => { if (p.id === SID) load(); });
+}
+function errKey(st) { return 'err'; }
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>测试点管理 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card flex spread">
+    <h2 style="margin:0">测试点 & 子任务 <small class="muted">题目 #<span id="pid"></span> <a id="p-link" href="#">查看题目</a></small></h2>
+    <div class="flex">
+      <button class="btn small" id="add-inline">＋ 行内添加</button>
+      <input type="file" id="upload-in" accept=".in" style="display:none" multiple>
+      <input type="file" id="upload-out" accept=".out" style="display:none" multiple>
+      <button class="btn small secondary" id="upload-btn">上传 .in/.out 文件对</button>
+      <button class="btn small secondary" id="add-group">＋ 创建子任务</button>
+    </div>
+  </div>
+  <div class="card" id="groups"></div>
+  <div class="card" id="cases"></div>
+  <div class="card hidden" id="editor"></div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+if (!NoldOJ.user() || !['teacher','admin','super'].includes(NoldOJ.user().role)) location.href = '/';
+const PID = Number(NoldOJ.qs('id')) || 1;
+document.getElementById('pid').textContent = PID;
+document.getElementById('p-link').href = '/problem.html?id=' + PID;
+let data = null;
+
+async function load() {
+  const r = await NoldOJ.api('/problems/' + PID + '/testcases');
+  if (!r.ok) { document.getElementById('cases').innerHTML = r.error; return; }
+  data = r.data;
+  document.getElementById('groups').innerHTML = '<h3 style="margin-top:0">子任务（分组）</h3>' +
+    (data.groups.length ? '<table class="data"><thead><tr><th>ID</th><th>名称</th><th>分值</th><th>聚合</th><th>依赖</th><th>操作</th></tr></thead><tbody>' +
+      data.groups.map(g => '<tr><td>' + g.id + '</td><td>' + NoldOJ.escapeHtml(g.name) + '</td><td>' + g.score + '</td><td>' + g.agg +
+        '</td><td class="muted">' + (JSON.parse(g.depends || '[]').join(', ') || '-') + '</td>' +
+        '<td><button class="btn small secondary" data-gedit="' + g.id + '">编辑</button> <button class="btn small danger" data-gdel="' + g.id + '">删除</button></td></tr>').join('') + '</tbody></table>'
+      : '<div class="muted">未分组，全部测试点按各点分值累加</div>');
+  document.getElementById('cases').innerHTML = '<h3 style="margin-top:0">测试点</h3>' +
+    '<table class="data"><thead><tr><th>ID</th><th>子任务</th><th>分值</th><th>时限</th><th>内存</th><th>样例</th><th>输入</th><th>输出</th><th>操作</th></tr></thead><tbody>' +
+    (data.testcases.length ? data.testcases.map(tc => '<tr><td>' + tc.id + '</td><td>' + (tc.group_id || '-') + '</td><td>' + tc.score + '</td><td>' + (tc.time_limit_ms || '默认') + '</td><td>' + (tc.memory_limit_mb || '默认') + '</td>' +
+      '<td>' + (tc.is_sample ? '✔' : '') + '</td>' +
+      '<td class="code-box mono muted">' + NoldOJ.escapeHtml((tc.input || '').slice(0, 100)) + (tc.input.length > 100 ? '…' : '') + '</td>' +
+      '<td class="mono muted">' + NoldOJ.escapeHtml((tc.output || '').slice(0, 100)) + (tc.output.length > 100 ? '…' : '') + '</td>' +
+      '<td><button class="btn small secondary" data-edit="' + tc.id + '">编辑</button> <button class="btn small danger" data-del="' + tc.id + '">删除</button></td></tr>').join('')
+      : '<tr><td colspan="9" class="muted">还没有测试点</td></tr>') + '</tbody></table>';
+  document.querySelectorAll('button[data-del]').forEach(b => b.onclick = async () => {
+    if (!confirm('确认删除')) return;
+    await NoldOJ.api('/problems/' + PID + '/testcases/' + b.dataset.del, { method: 'DELETE' }); load();
+  });
+  document.querySelectorAll('button[data-edit]').forEach(b => b.onclick = () => showEditor(data.testcases.find(t => String(t.id) === b.dataset.edit)));
+  document.querySelectorAll('button[data-gdel]').forEach(b => b.onclick = async () => {
+    if (!confirm('确认删除该子任务（测试点会回到未分组）')) return;
+    await NoldOJ.api('/problems/' + PID + '/groups/' + b.dataset.gdel, { method: 'DELETE' }); load();
+  });
+  document.querySelectorAll('button[data-gedit]').forEach(b => b.onclick = () => showGroupEditor(data.groups.find(g => String(g.id) === b.dataset.gedit)));
+}
+
+function showEditor(tc) {
+  const e = document.getElementById('editor');
+  e.classList.remove('hidden');
+  e.innerHTML = '<h3>编辑测试点 #' + (tc ? tc.id : '') + '</h3>' +
+    '<div class="form-row"><div><label>分值</label><input id="e-score" value="' + (tc ? tc.score : 10) + '"></div>' +
+    '<div><label>子任务ID（空=未分组）</label><input id="e-group" value="' + (tc && tc.group_id || '') + '"></div>' +
+    '<div><label>时限ms（空=默认）</label><input id="e-tl" value="' + (tc && tc.time_limit_ms || '') + '"></div>' +
+    '<div><label>内存MB（空=默认）</label><input id="e-ml" value="' + (tc && tc.memory_limit_mb || '') + '"></div>' +
+    '<div><label>容差（空=默认）</label><input id="e-tol" value="' + (tc && tc.float_tolerance != null ? tc.float_tolerance : '') + '"></div>' +
+    '<div><label>样例可见</label><select id="e-sample"><option value="0">否</option><option value="1"' + (tc && tc.is_sample ? ' selected' : '') + '>是</option></select></div></div>' +
+    '<label>输入</label><textarea id="e-in" class="mono" style="min-height:120px">' + (tc ? NoldOJ.escapeHtml(tc.input) : '') + '</textarea>' +
+    '<label>输出</label><textarea id="e-out" class="mono" style="min-height:120px">' + (tc ? NoldOJ.escapeHtml(tc.output) : '') + '</textarea>' +
+    '<div class="flex mt"><button class="btn" id="e-save">保存</button><button class="btn secondary" id="e-close">关闭</button></div>';
+  document.getElementById('e-close').onclick = () => e.classList.add('hidden');
+  document.getElementById('e-save').onclick = async () => {
+    const body = {
+      score: Number(document.getElementById('e-score').value),
+      groupId: document.getElementById('e-group').value ? Number(document.getElementById('e-group').value) : null,
+      timeLimitMs: document.getElementById('e-tl').value || undefined,
+      memoryLimitMb: document.getElementById('e-ml').value || undefined,
+      floatTolerance: document.getElementById('e-tol').value === '' ? null : Number(document.getElementById('e-tol').value),
+      isSample: document.getElementById('e-sample').value === '1',
+      input: document.getElementById('e-in').value,
+      output: document.getElementById('e-out').value
+    };
+    const r = tc
+      ? await NoldOJ.api('/problems/' + PID + '/testcases/' + tc.id, { method: 'PUT', body })
+      : await NoldOJ.api('/problems/' + PID + '/testcases', { method: 'POST', body: { ...body, cases: undefined } });
+    if (r.ok) { e.classList.add('hidden'); load(); } else alert(r.error);
+  };
+}
+
+function showGroupEditor(g) {
+  const e = document.getElementById('editor');
+  e.classList.remove('hidden');
+  e.innerHTML = '<h3>子任务设置</h3>' +
+    '<div class="form-row"><div><label>名称</label><input id="g-name" value="' + (g ? NoldOJ.escapeHtml(g.name) : '') + '"></div>' +
+    '<div><label>总分</label><input id="g-score" value="' + (g ? g.score : 10) + '"></div>' +
+    '<div><label>聚合策略（sum所有通过/min最少通过/max最大）</label><input id="g-agg" value="' + (g ? g.agg : 'min') + '"></div>' +
+    '<div><label>依赖子任务ID（逗号分隔，前置达成才计分）</label><input id="g-deps" value="' + (g ? JSON.parse(g.depends || '[]').join(',') : '') + '"></div></div>' +
+    '<label>分组评分脚本（终变量 score；可用 SCORE 聚合分、TOTAL 组分、PASSED/CASES、TIME/MEMORY）</label>' +
+    '<textarea id="g-script" class="mono" spellcheck="false">' + (g ? g.score_script || '' : '') + '</textarea>' +
+    '<div class="flex mt"><button class="btn" id="g-save">保存</button><button class="btn secondary" id="g-close">关闭</button></div>';
+  document.getElementById('g-close').onclick = () => e.classList.add('hidden');
+  document.getElementById('g-save').onclick = async () => {
+    const body = {
+      name: document.getElementById('g-name').value,
+      score: Number(document.getElementById('g-score').value),
+      agg: document.getElementById('g-agg').value,
+      depends: document.getElementById('g-deps').value.split(',').map(Number).filter(Boolean),
+      scoreScript: document.getElementById('g-script').value
+    };
+    const r = g ? await NoldOJ.api('/problems/' + PID + '/groups/' + g.id, { method: 'PUT', body })
+      : await NoldOJ.api('/problems/' + PID + '/groups', { method: 'POST', body });
+    if (r.ok) { e.classList.add('hidden'); load(); } else alert(r.error);
+  };
+}
+
+document.getElementById('add-inline').onclick = () => showEditor(null);
+document.getElementById('add-group').onclick = () => showGroupEditor(null);
+document.getElementById('upload-btn').onclick = () => {
+  const up = async () => {
+    const inFiles = document.getElementById('upload-in').files;
+    const outFiles = document.getElementById('upload-out').files;
+    if (!inFiles.length) { alert('请先选择 .in 输入文件'); return; }
+    for (let i = 0; i < inFiles.length; i++) {
+      const inFile = inFiles[i];
+      const base = inFile.name.replace(/\.in$/i, '');
+      const outFile = [...outFiles].find(f => f.name.replace(/\.out$/i, '') === base) || null;
+      const body = { input: await inFile.text(), output: outFile ? await outFile.text() : '' };
+      await NoldOJ.api('/problems/' + PID + '/testcases', { method: 'POST', body });
+    }
+    load();
+  };
+  document.getElementById('upload-in').onchange = document.getElementById('upload-out').onchange = up;
+  document.getElementById('upload-in').click();
+};
+load();
+</script>
+</body>
+</html>

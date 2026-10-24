@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>题库 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <div class="flex spread">
+      <h2 style="margin:0">题库</h2>
+      <input id="search" class="search-box" placeholder="搜索题目（忽略空格，实时过滤）">
+    </div>
+    <div class="flex mt" id="filter-tag"></div>
+    <div class="flex mt" id="filter-diff"></div>
+  </div>
+  <div class="card">
+    <table class="data" id="tbl">
+      <thead><tr><th style="width:70px">状态</th><th style="width:80px">题号</th><th>题目</th><th>难度</th><th style="width:120px">通过率</th></tr></thead>
+      <tbody id="tbody"><tr><td colspan="5" class="muted">加载中...</td></tr></tbody>
+    </table>
+    <div class="pagination" id="pager"></div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+let state = { page: 1, tag: '', difficulty: '', search: '' };
+let tags = [];
+const solvedSet = {};
+
+async function loadSolved() {
+  if (!NoldOJ.user()) return;
+  const r = await NoldOJ.api('/submissions?mine=1&status=ac&pageSize=100');
+  if (r.ok) r.data.items.forEach(s => solvedSet[s.problem_id] = 1);
+}
+
+async function load() {
+  const params = new URLSearchParams({ page: state.page, pageSize: 30 });
+  if (state.search) params.set('search', state.search);
+  if (state.difficulty !== '') params.set('difficulty', state.difficulty);
+  if (state.tag) params.set('tag', state.tag);
+  const r = await NoldOJ.api('/problems?' + params.toString());
+  if (!r.ok) { document.getElementById('tbody').innerHTML = '<tr><td colspan=5>' + r.error + '</td></tr>'; return; }
+  const tb = document.getElementById('tbody');
+  if (!r.data.items.length) { tb.innerHTML = '<tr><td colspan="5" class="muted">没有符合条件的题目</td></tr>'; }
+  else tb.innerHTML = r.data.items.map(p => {
+    const rate = p.submit_count ? Math.round(p.accepted_count / p.submit_count * 100) + '%' : '-';
+    return '<tr><td>' + (solvedSet[p.id] ? '<span class="st-ac">✔</span>' : '') + '</td>' +
+      '<td>' + p.id + '</td>' +
+      '<td><a href="/problem.html?id=' + p.id + '">' + NoldOJ.escapeHtml(p.title) + '</a> ' + (p.is_public ? '' : '<span class="tag-pill" style="background:#888">私有</span>') + '</td>' +
+      '<td>' + NoldOJ.diffBadge(p.difficulty) + '</td>' +
+      '<td class="muted">' + rate + '</td></tr>';
+  }).join('');
+  // pager
+  const pages = Math.ceil(r.data.total / r.data.pageSize);
+  let ph = '';
+  for (let i = Math.max(1, state.page - 3); i <= Math.min(pages, state.page + 3); i++) {
+    ph += '<button class="btn small ' + (i === state.page ? '' : 'secondary') + '" data-p="' + i + '">' + i + '</button>';
+  }
+  document.getElementById('pager').innerHTML = pages > 1 ? ph : '';
+  document.querySelectorAll('#pager button').forEach(b => b.onclick = () => { state.page = Number(b.dataset.p); load(); });
+}
+
+function renderFilters() {
+  document.getElementById('filter-tag').innerHTML = '<span class="muted">标签：</span>' +
+    '<button class="btn small ' + (state.tag === '' ? '' : 'secondary') + '" data-t="">全部</button>' +
+    tags.map(t => '<button class="btn small ' + (state.tag === t.name ? '' : 'secondary') + '" data-t="' + NoldOJ.escapeHtml(t.name) + '" style="border-color:' + t.color + '">' + NoldOJ.escapeHtml(t.name) + '</button>').join('');
+  document.querySelectorAll('#filter-tag button').forEach(b => b.onclick = () => { state.tag = b.dataset.t; state.page = 1; load(); });
+  const NAMES = ['入门', '简单', '中等', '较难', '困难', '专家'];
+  document.getElementById('filter-diff').innerHTML = '<span class="muted">难度：</span>' +
+    '<button class="btn small ' + (state.difficulty === '' ? '' : 'secondary') + '" data-d="">全部</button>' +
+    NAMES.map((n, i) => '<button class="btn small ' + (String(state.difficulty) === String(i) ? '' : 'secondary') + '" data-d="' + i + '">' + n + '</button>').join('');
+  document.querySelectorAll('#filter-diff button').forEach(b => b.onclick = () => { state.difficulty = b.dataset.d; state.page = 1; load(); });
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  state.search = e.target.value; state.page = 1;
+  clearTimeout(window.__st);
+  window.__st = setTimeout(load, 200);
+});
+
+(async function init() {
+  const tr = await NoldOJ.api('/tags');
+  if (tr.ok) tags = tr.data.items;
+  renderFilters();
+  await loadSolved();
+  load();
+})();
+</script>
+</body>
+</html>

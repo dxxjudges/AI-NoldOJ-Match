@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>注册 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="center-card card">
+    <h2>注册</h2>
+    <div id="msg"></div>
+    <label>用户名</label>
+    <input id="username" autocomplete="username">
+    <label>密码</label>
+    <input id="password" type="password" autocomplete="current-password">
+    <div class="mt" id="captcha-row"></div>
+    <button class="btn mt" id="login-btn" style="width:100%">登 录</button>
+    <p class="muted mt">已有账号？<a href="/login.html">直接登录</a></p>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+let capId = '';
+async function loadCaptcha() {
+  const r = await NoldOJ.api('/captcha');
+  const row = document.getElementById('captcha-row');
+  if (!r.ok || r.enabled === false) { row.innerHTML = ''; return; }
+  capId = r.id;
+  row.innerHTML = '<label>验证码</label><div class="flex"><input id="captcha-code" style="flex:1" maxlength="8" autocomplete="off"><span id="captcha-img" style="cursor:pointer;color:var(--primary)" title="点击刷新">' + r.svg + '</span></div>';
+  document.getElementById('captcha-img').onclick = loadCaptcha;
+}
+loadCaptcha();
+document.getElementById('login-btn').onclick = async function () {
+  this.disabled = true; this.textContent = '注册中...';
+  const r = await NoldOJ.api('/auth/register', {
+    method: 'POST',
+    body: {
+      username: document.getElementById('username').value.trim(),
+      password: document.getElementById('password').value,
+      captchaId: capId,
+      captchaCode: (document.getElementById('captcha-code') || {}).value || ''
+    }
+  });
+  this.disabled = false; this.textContent = '注 册';
+  const msg = document.getElementById('msg');
+  if (r.ok) {
+    msg.innerHTML = '<div class="notice info">注册成功，正在跳转登录...</div>';
+    setTimeout(() => { location.href = '/login.html'; }, 800);
+  } else {
+    msg.innerHTML = '<div class="notice error">' + NoldOJ.escapeHtml(r.error) + '</div>';
+    loadCaptcha();
+  }
+};
+document.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-btn').click(); });
+document.getElementById('password').type = 'password';
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>查重报告 - NoldOJ</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+<script>try{if(localStorage.getItem('noldoj-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<nav class="navbar"><div class="nav-inner"><a href="/" class="brand">NoldOJ</a><div class="nav-links" id="nav-links"></div><div class="nav-right" id="nav-right"></div></div></nav>
+<main class="container">
+  <div class="card">
+    <h2>查重报告 <small class="muted" id="meta"></small></h2>
+    <div id="list" class="muted">加载中...</div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+<script>
+(async function () {
+  const r = await NoldOJ.api('/plagiarism/' + NoldOJ.qs('id'));
+  if (!r.ok) { document.getElementById('list').innerHTML = r.error; return; }
+  document.getElementById('meta').textContent = '#' + r.data.id + ' · ' + (r.data.problem_title || r.data.contest_title || '');
+  document.getElementById('list').classList.remove('muted');
+  document.getElementById('list').innerHTML = r.data.pairs.length
+    ? '<table class="data"><thead><tr><th>#</th><th>用户 A</th><th>提交</th><th>用户 B</th><th>提交</th><th>相似度</th><th>等级</th></tr></thead><tbody>' +
+      r.data.pairs.map((p, i) => '<tr><td>' + (i + 1) + '</td>' +
+      '<td><a href="/profile.html?id=' + p.a_user_id + '">' + NoldOJ.escapeHtml(p.a_username) + '</a></td><td><a href="/status-detail.html?id=' + p.a_sub_id + '">#' + p.a_sub_id + '</a></td>' +
+      '<td><a href="/profile.html?id=' + p.b_user_id + '">' + NoldOJ.escapeHtml(p.b_username) + '</a></td><td><a href="/status-detail.html?id=' + p.b_sub_id + '">#' + p.b_sub_id + '</a></td>' +
+      '<td>' + (p.similarity * 100).toFixed(1) + '%</td>' +
+      '<td>' + (p.level === 'high' ? '<span class="st-wa">高危</span>' : '<span class="st-judging">疑似</span>') + '</td></tr>').join('') + '</tbody></table>'
+    : '未发现相似提交';
+})();
+</script>
+</body>
+</html>
