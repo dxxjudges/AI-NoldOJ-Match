@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-NoldOJ-Match - 三款大模型同题竞技 NoldOJ 横向评测</title>
+<meta name="description" content="同一份 NoldOJ 需求文档，DeepSeek-V4.1-Flash / GLM-5.3-Flash / MiMo-V2.6-Flash 三款大模型独立交付完整 OJ 系统。功能完整性、bug 数量及严重等级、用户体验三维横评与选型建议。">
+<style>
+  :root {
+    --bg: #0b1020;
+    --bg-soft: #101730;
+    --card: #141c38;
+    --card-border: #22305c;
+    --text: #e8ecf7;
+    --text-dim: #9aa6c8;
+    --text-faint: #6b7799;
+    --accent: #6366f1;
+    --accent-2: #22d3ee;
+    --accent-3: #a78bfa;
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --radius: 16px;
+    --shadow: 0 20px 50px -20px rgba(0, 0, 0, .6);
+    --maxw: 1140px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, "Noto Sans SC", "Source Han Sans SC", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  code {
+    font-family: "Cascadia Code", Consolas, monospace;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+    padding: 1px 7px;
+    border-radius: 6px;
+    font-size: .85em;
+  }
+  pre code { background: transparent; border: 0; padding: 0; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  /* ── Nav ─────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px);
+    background: rgba(11,16,32,.8);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: .5px; }
+  .brand .logo {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center;
+    color: #fff; font-size: 13px; font-weight: 800;
+  }
+  .nav-links { display: flex; gap: 26px; font-size: 14px; color: var(--text-dim); }
+  .nav-links a { transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-toggle { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; padding: 0; }
+  @media (max-width: 768px) {
+    .nav-toggle { display: block; }
+    .nav-links { display: none; position: absolute; top: 62px; left: 0; right: 0; flex-direction: column; background: rgba(11,16,32,.95); padding: 16px 24px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .nav-links.open { display: flex; }
+  }
+
+  /* ── Hero ─────────────────────────────── */
+  header {
+    position: relative;
+    overflow: hidden;
+    padding: 110px 0 90px;
+    text-align: center;
+  }
+  header::before {
+    content: "";
+    position: absolute; inset: -40% -20% auto;
+    height: 120%;
+    background:
+      radial-gradient(600px 300px at 20% 0%, rgba(99,102,241,.28), transparent 70%),
+      radial-gradient(700px 320px at 80% 0%, rgba(34,211,238,.18), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--text-dim);
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 6px 16px; border-radius: 999px;
+    margin-bottom: 26px;
+  }
+  .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+  header h1 { font-size: clamp(38px, 6vw, 64px); font-weight: 800; line-height: 1.12; letter-spacing: -.5px; }
+  header h1 .grad {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2) 50%, var(--accent-3));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { max-width: 680px; margin: 22px auto 0; color: var(--text-dim); font-size: 17px; }
+  .hero-cta { margin-top: 38px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 28px; border-radius: 12px; font-weight: 600; font-size: 15px;
+    transition: transform .15s, box-shadow .15s, background .2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #4f46e5);
+    color: #fff; box-shadow: 0 10px 30px -8px rgba(99,102,241,.6);
+  }
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,.16); color: var(--text);
+    background: rgba(255,255,255,.04);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.08); }
+  .hero-stats { margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 20px 12px;
+  }
+  .stat b { display: block; font-size: 28px; font-weight: 800; }
+  .stat span { font-size: 13px; color: var(--text-faint); }
+  .stat b.c1 { color: var(--accent); } .stat b.c2 { color: var(--green); }
+  .stat b.c3 { color: var(--amber); } .stat b.c4 { color: var(--accent-2); }
+
+  /* ── Sections ─────────────────────────── */
+  section { padding: 84px 0; }
+  section:nth-of-type(even) { background: var(--bg-soft); }
+  .sec-head { text-align: center; margin-bottom: 52px; }
+  .sec-head .tag {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--accent-2); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .sec-head h2 { font-size: clamp(26px, 3.6vw, 38px); font-weight: 800; }
+  .sec-head p { max-width: 620px; margin: 14px auto 0; color: var(--text-dim); font-size: 15px; }
+
+  .grid { display: grid; gap: 20px; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 900px) { .g3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 26px;
+    transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(99,102,241,.45); }
+  .card .ico {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center; margin-bottom: 16px;
+  }
+  .card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--text-dim); }
+  .card ul { list-style: none; font-size: 13.5px; color: var(--text-dim); }
+  .card ul li { padding-left: 20px; position: relative; margin-top: 6px; }
+  .card ul li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 6px; height: 6px; border-radius: 2px; background: var(--accent); }
+  .i-indigo  { background: rgba(99,102,241,.15); color: #818cf8; }
+  .i-cyan    { background: rgba(34,211,238,.13); color: #67e8f9; }
+  .i-green   { background: rgba(52,211,153,.13); color: #6ee7b7; }
+  .i-purple  { background: rgba(167,139,250,.13); color: #c4b5fd; }
+  .i-amber   { background: rgba(251,191,36,.12); color: #fcd34d; }
+  .i-red     { background: rgba(248,113,113,.12); color: #fca5a5; }
+
+  .medal {
+    display: inline-block; font-size: 12px; font-weight: 700;
+    padding: 3px 12px; border-radius: 999px; margin-left: 8px; vertical-align: 3px;
+  }
+  .m-gold   { background: rgba(251,191,36,.15); color: var(--amber); border: 1px solid rgba(251,191,36,.4); }
+  .m-silver { background: rgba(154,166,200,.12); color: #c3cce6; border: 1px solid rgba(154,166,200,.4); }
+  .m-bronze { background: rgba(251,146,60,.12); color: #fdba74; border: 1px solid rgba(251,146,60,.4); }
+  .score-line { display: flex; align-items: baseline; gap: 8px; margin: 6px 0 14px; }
+  .score-line b { font-size: 30px; font-weight: 800; }
+  .score-line span { font-size: 13px; color: var(--text-faint); }
+
+  /* Compare spotlight */
+  .spotlight { background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(34,211,238,.06)); border: 1px solid var(--card-border); border-radius: 20px; padding: 44px; }
+  .spotlight .grid { margin-top: 26px; }
+  .sec-item { display: flex; gap: 14px; align-items: flex-start; }
+  .sec-item .n {
+    flex: none; width: 34px; height: 34px; border-radius: 10px;
+    background: rgba(99,102,241,.2); color: #a5b4fc;
+    display: grid; place-items: center; font-weight: 700; font-size: 14px;
+  }
+  .sec-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .sec-item p { font-size: 13.5px; color: var(--text-dim); }
+
+  /* Scoreboard */
+  .setup { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+  @media (max-width: 820px) { .setup { grid-template-columns: 1fr; } }
+  .code-block {
+    background: #0a0e1d; border: 1px solid var(--card-border); border-radius: 14px;
+    overflow: hidden; box-shadow: var(--shadow);
+  }
+  .code-block .bar { display: flex; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--card-border); }
+  .code-block .bar i { width: 11px; height: 11px; border-radius: 50%; }
+  .code-block .bar i:nth-child(1) { background: #f87171; }
+  .code-block .bar i:nth-child(2) { background: #fbbf24; }
+  .code-block .bar i:nth-child(3) { background: #34d399; }
+  .code-block pre { padding: 20px; font-size: 13.5px; overflow-x: auto; color: #c7d2fe; font-family: "Cascadia Code", Consolas, monospace; line-height: 1.6; }
+  .code-block .keyword { color: #569cd6; }
+  .code-block .gold { color: #fbbf24; font-weight: 700; }
+  .code-block .silver { color: #c3cce6; font-weight: 700; }
+  .code-block .bronze { color: #fdba74; font-weight: 700; }
+  .code-block .comment { color: #6a9955; }
+  .setup ol { list-style: none; counter-reset: step; display: grid; gap: 18px; }
+  .setup ol li { counter-increment: step; display: flex; gap: 14px; color: var(--text-dim); font-size: 14px; }
+  .setup ol li::before {
+    content: counter(step); flex: none; width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 14px;
+  }
+
+  /* FAQ */
+  details { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 12px; }
+  details summary { cursor: pointer; font-weight: 600; font-size: 15px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details summary::after { content: "+"; font-size: 20px; color: var(--accent); font-weight: 500; transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin-top: 10px; color: var(--text-dim); font-size: 14px; }
+
+  footer { border-top: 1px solid rgba(255,255,255,.06); padding: 40px 0; text-align: center; color: var(--text-faint); font-size: 13px; }
+  footer .brand { justify-content: center; margin-bottom: 10px; }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="logo">AI</span> AI-NoldOJ-Match</a>
+    <button class="nav-toggle" aria-label="菜单">☰</button>
+    <div class="nav-links">
+      <a href="#entries">参赛项目</a>
+      <a href="#compare">能力对比</a>
+      <a href="#score">评分榜</a>
+      <a href="#advice">选型建议</a>
+      <a href="#faq">常见问题</a>
+      <a href="https://github.com/dxxjudges/AI-NoldOJ-Match" target="_blank" rel="noopener">GitHub 仓库</a>
+    </div>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <div class="hero-badge"><span class="dot"></span>同一命题 · 三款大模型 · 独立交付完整 OJ 系统</div>
+    <h1>同一份 NoldOJ，<span class="grad">三款大模型各自交卷</span></h1>
+    <p class="hero-sub">DeepSeek-V4.1-Flash、GLM-5.3-Flash、MiMo-V2.6-Flash 依据同一份 480 行需求文档，独立实现 Windows 原生在线评测系统。本页记录横向评测结果：功能完整性、bug 数量及严重等级、用户体验，以及大模型编程选型建议。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#score">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        查看评分榜
+      </a>
+      <a class="btn btn-ghost" href="#entries">参赛项目</a>
+      <a class="btn btn-ghost" href="#advice">选型建议</a>
+      <a class="btn btn-ghost" href="https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/README.md" target="_blank" rel="noopener">完整评测报告（README）
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/dxxjudges/AI-NoldOJ-Match" target="_blank" rel="noopener">GitHub 仓库
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b class="c1">3</b><span>AI 参赛选手</span></div>
+      <div class="stat"><b class="c2">30+</b><span>功能模块需求</span></div>
+      <div class="stat"><b class="c3">3</b><span>评测维度</span></div>
+      <div class="stat"><b class="c4">480</b><span>行需求文档</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="entries">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Contestants</span>
+      <h2>参赛项目</h2>
+      <p>三份实现均为零构建、Node.js 内置 SQLite 的 Windows 原生 OJ，风格与完成度差异显著。</p>
+    </div>
+    <div class="grid g3">
+      <div class="card reveal">
+        <div class="ico i-amber"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15a2 2 0 100-4 2 2 0 000 4zm0 0v3m-7-3a7 7 0 1114 0 7 7 0 01-14 0z"/></svg></div>
+        <h3>DeepSeek-V4.1-Flash<span class="medal m-gold">🥇 冠军</span></h3>
+        <div class="score-line"><b class="i-amber" style="background:none;color:var(--amber)">28.0</b><span>/ 30</span></div>
+        <ul>
+          <li>21 个路由模块，功能覆盖最全</li>
+          <li>api + unit 测试齐备，npm test / lint / migrate 一应俱全</li>
+          <li>groups + visibility 权限可见性体系最完整</li>
+          <li>Markdown 增强（KaTeX/Mermaid/ECharts）覆盖最贴近需求</li>
+          <li>AGENTS.md + docs/，文档-实现-工具链闭环</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="ico i-cyan"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 1.657 1.343 3 3 3h10c1.657 0 3-1.343 3-3V7c0-1.657-1.343-3-3-3H7c-1.657 0-3 1.343-3 3zM7 12h10"/></svg></div>
+        <h3>MiMo-V2.6-Flash<span class="medal m-silver">🥈 亚军</span></h3>
+        <div class="score-line"><b style="color:#c3cce6">26.3</b><span>/ 30</span></div>
+        <ul>
+          <li>19 个路由模块，分层清晰（routes/middleware/services/ws）</li>
+          <li>4 个测试文件，OpenAPI 3.0 暴露</li>
+          <li>沙箱采用"原生扩展点 + 可靠回退层"设计，可移植性最好</li>
+          <li>README 自带功能状态表，诚实标注"部分完成"</li>
+          <li>部分管理面板功能留待扩展</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="ico i-red"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15a2 2 0 100-4 2 2 0 000 4zm8.4-3a8.4 8.4 0 01-.1 1.2l2 1.6-2 3.4-2.4-1a8 8 0 01-2.1 1.2l-.4 2.6h-4l-.4-2.6a8 8 0 01-2.1-1.2l-2.4 1-2-3.4 2-1.6A8.4 8.4 0 013.6 12"/></svg></div>
+        <h3>GLM-5.3-Flash<span class="medal m-bronze">🥉 季军</span></h3>
+        <div class="score-line"><b style="color:#fdba74">23.5</b><span>/ 30</span></div>
+        <ul>
+          <li>13 个路由模块，工程化最薄弱（package.json 无 scripts）</li>
+          <li>业务测试近乎缺失，部署需手动多步操作</li>
+          <li>但沙箱技术深度全场最佳：PowerShell 内嵌 C#</li>
+          <li>挂起 CreateProcess → 加入 Job Object → Resume 防逃逸</li>
+          <li>受限令牌 + 低完整性级别，最贴近三层安全架构需求</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Head to Head</span>
+      <h2>关键能力对比</h2>
+      <p>以需求文档为标尺逐项核对，差异集中在工程化自觉性、沙箱实现深度与交付完整度上。</p>
+    </div>
+    <div class="spotlight reveal">
+      <div class="grid g3">
+        <div class="sec-item">
+          <div class="n">01</div>
+          <div><h4>沙箱实现</h4><p>GLM 挂起创建 + Job Object + 受限令牌最贴近需求；DeepSeek 完整三层思路；MiMo 扩展点 + 回退层。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">02</div>
+          <div><h4>工程化</h4><p>DeepSeek 全场唯一闭环：start/test/lint/migrate 脚本齐备；MiMo 次之；GLM 需手动启动。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">03</div>
+          <div><h4>功能覆盖</h4><p>DeepSeek 21 个路由模块覆盖最广；MiMo 19 个紧随其后；GLM 13 个存在合并或简化。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">04</div>
+          <div><h4>测试保障</h4><p>DeepSeek api + unit 双套测试；MiMo 4 个测试文件；GLM 仅 run-all.js，业务测试近乎空白。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">05</div>
+          <div><h4>权限与可见性</h4><p>DeepSeek 独立 groups + visibility 服务，隐私开关、免密切换全数落地，最贴近需求 3.9。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">06</div>
+          <div><h4>AI 能力</h4><p>三者均覆盖安全审查 / 提示 / 数据生成；GLM 独立 injection.js 模块，注入防护最显式。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">07</div>
+          <div><h4>稳定性预期</h4><p>DeepSeek 风险最低；MiMo 中低（轮询采样有漏检窗口）；GLM 中高（集成风险最大）。</p></div>
+        </div>
+        <div class="sec-item">
+          <div class="n">08</div>
+          <div><h4>文档体验</h4><p>DeepSeek README + AGENTS.md + docs 最系统；GLM 沙箱原理讲解最深入但缺工程化指引。</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="score">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Scoreboard</span>
+      <h2>评分榜</h2>
+      <p>功能完整性 / bug 数量及严重等级 / 用户体验，三个维度各 10 分，满分 30。</p>
+    </div>
+
+    <div class="setup reveal">
+      <div class="code-block">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre><code><span class="comment"># AI-NoldOJ-Match 评分榜（10 分制 × 3 维度）</span>
+<span class="keyword">维度</span>              DeepSeek   MiMo    GLM
+功能完整性          9.5       9.0      8.5
+bug/稳定性          9.0       8.5      7.0
+用户体验            9.5       8.8      8.0
+<span class="comment">─────────────────────────────────────</span>
+总分（30）          <span class="gold">28.0 🥇</span>   <span class="silver">26.3 🥈</span>  <span class="bronze">23.5 🥉</span></code></pre>
+      </div>
+      <ol>
+        <li><b>DeepSeek-V4.1-Flash（28.0）</b> — 最接近成品：架构规范、功能最全、工程化最佳，可直接部署。</li>
+        <li><b>MiMo-V2.6-Flash（26.3）</b> — 均衡务实：功能清单最广、分层清晰、有测试，部分功能待完善。</li>
+        <li><b>GLM-5.3-Flash（23.5）</b> — 技术深度突出：原生沙箱实现最佳，但工程化拖后腿，可用性较差。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="advice">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Selection Guide</span>
+      <h2>大模型编程选型建议</h2>
+      <p>基于本次同题实测提炼，按任务类型选择合适的模型，事半功倍。</p>
+    </div>
+    <div class="grid g3">
+      <div class="card reveal">
+        <div class="ico i-indigo"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2m-10 0h10"/></svg></div>
+        <h3>从零搭建完整工程</h3>
+        <p>选 <b style="color:var(--amber)">DeepSeek-V4.1</b>。自发补齐测试 / lint / 启动脚本 / 迁移脚本，具备产品思维而非仅代码思维，交付物第二天还能维护。</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico i-red"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+        <h3>底层 / 系统级攻坚</h3>
+        <p>选 <b style="color:#fdba74">GLM-5.3</b>。遇到 Windows API、C# 互操作等硬核技术点时会下钻到最深实现，技术含金量最高，需配人工工程化收尾。</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico i-green"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+        <h3>快速铺功能原型</h3>
+        <p>选 <b style="color:#c3cce6">MiMo-V2.6</b>。功能覆盖广、交付速度快、状态标注诚实，便于二次开发接手，可接受后期补全。</p>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top: 20px;">
+      <div class="card reveal">
+        <div class="ico i-purple"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+        <h3>通用原则</h3>
+        <ul>
+          <li>看工程化自觉性，不只看代码行数</li>
+          <li>警惕"功能清单很长但收尾仓促"，逐条验收需求</li>
+          <li>技术深度与交付完整度往往不可兼得</li>
+          <li>分模块多轮驱动，降低长上下文烂尾率</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="ico i-cyan"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+        <h3>评测三件套</h3>
+        <ul>
+          <li>功能完整性：对照需求逐项勾验</li>
+          <li>缺陷密度：静态审查 + 测试通过率</li>
+          <li>可用性：能否 10 分钟内跑起来</li>
+          <li>该框架可复用到其他模型横评</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">FAQ</span>
+      <h2>常见问题</h2>
+    </div>
+    <div class="reveal">
+      <details open>
+        <summary>评测是怎么进行的？</summary>
+        <p>三款模型依据同一份 <a href="https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/NoldOJ_Requirements_Document.md" target="_blank" rel="noopener" style="color: var(--accent-2);">NoldOJ 需求文档</a>（约 480 行、30+ 功能模块）独立完成实现。评测采用只读代码评审：统计路由模块数与测试文件数，重点阅读沙箱、判题队列、AI、权限可见性等核心实现，不实际运行判题以避免环境差异干扰。</p>
+      </details>
+      <details>
+        <summary>评分依据是什么？</summary>
+        <p>三个维度各 10 分：功能完整性（对照需求逐项勾验）、bug 数量及严重等级（工程化水平 + 静态审查推断的稳定性风险）、用户体验（文档 / 配置 / 部署 / 界面预期）。</p>
+      </details>
+      <details>
+        <summary>三份实现有何共同点？</summary>
+        <p>均为零构建方案：Node.js ≥ 24 + 内置 <code>node:sqlite</code>、纯 vanilla JS 前端、Windows 原生沙箱（Job Object / 受限令牌）、SVG 验证码、双 Token 认证、WebSocket 实时推送、AI 安全审查（Ollama）等。</p>
+      </details>
+      <details>
+        <summary>在哪里看完整评测报告？</summary>
+        <p>仓库根目录的 <a href="https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/README.md" target="_blank" rel="noopener" style="color: var(--accent-2);">README.md</a> 与 <a href="https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/evaluation_report.md" target="_blank" rel="noopener" style="color: var(--accent-2);">evaluation_report.md</a>；三份完整源码分别在 <code>DeepSeek-V4.1-Flash/</code>、<code>GLM-5.3-Flash/</code>、<code>MiMo-V2.6-Flash/</code> 目录下。</p>
+      </details>
+      <details>
+        <summary>结论可以直接照搬吗？</summary>
+        <p>选型建议基于本次单命题实测，模型表现与任务类型、提示词、上下文长度强相关。建议将"评测三件套"（功能完整性 / 缺陷密度 / 可用性）作为固定框架，在自己的真实任务上复测后再定型。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="logo">AI</span> AI-NoldOJ-Match</a>
+    <p style="margin-top: 12px;">三款大模型同题竞技 NoldOJ · 开源 · MIT License</p>
+    <p style="margin-top: 8px; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;">
+      <a href="https://github.com/dxxjudges/AI-NoldOJ-Match" target="_blank" rel="noopener" style="color: var(--accent-2);">GitHub</a>
+      <a href="https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/README.md" target="_blank" rel="noopener" style="color: var(--accent-2);">评测报告</a>
+      <a href="https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/NoldOJ_Requirements_Document.md" target="_blank" rel="noopener" style="color: var(--accent-2);">需求文档</a>
+    </p>
+    <p style="margin-top: 16px; font-size: 12px; color: var(--text-faint);">© 2026 AI-NoldOJ-Match. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+// Reveal animation
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+
+// Mobile menu toggle
+(function () {
+  var toggle = document.querySelector('.nav-toggle');
+  var links = document.querySelector('.nav-links');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', function () {
+    links.classList.toggle('open');
+    toggle.textContent = links.classList.contains('open') ? '✕' : '☰';
+  });
+  links.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      links.classList.remove('open');
+      toggle.textContent = '☰';
+    });
+  });
+})();
+</script>
+</body>
+</html>
