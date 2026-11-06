@@ -701,12 +701,18 @@ def slide_conclusion(prs):
                size=10.5, color=MUTED), 1.55, "fade", 0.45)
 
     a.mark(rect(s, 0.72, 6.3, 11.89, 0.008, fill="2B3B56", lw=0), 1.75, "fade", 0.3)
-    a.mark(text(s, 0.72, 6.48, 5.4, 0.24, "THANKS  FOR  WATCHING", size=9,
-               color=CYAN, bold=True, spacing=3.0), 1.85, "fade", 0.45)
-    a.mark(text(s, 5.8, 6.48, 3.4, 0.24, "NOLDOJ  /  AI MATCH", size=8,
-               color=DIM, align="center", spacing=1.6), 1.9, "fade", 0.4)
-    a.mark(text(s, 9.2, 6.48, 3.4, 0.24, "2026.11  ·  EVALUATION REPORT", size=8,
-               color=MUTED, align="right", spacing=1.0), 1.95, "fade", 0.4)
+    a.mark(text(s, 0.72, 6.4, 1.0, 0.2, "RESULTS", size=6.8, color=CYAN, bold=True,
+                spacing=2.0), 1.85, "fade", 0.35)
+    a.mark(text(s, 1.72, 6.37, 4.5, 0.24, "anm.dxxj.de5.net", size=9.2, color=INK,
+                font=FONT_NUM, spacing=0.6), 1.9, "fade", 0.4)
+    a.mark(text(s, 9.2, 6.4, 3.4, 0.2, "2026.11  ·  EVALUATION REPORT", size=7,
+                color=MUTED, align="right", spacing=1.0), 1.95, "fade", 0.35)
+    a.mark(text(s, 0.72, 6.64, 1.0, 0.2, "CODE", size=6.8, color=CYAN, bold=True,
+                spacing=2.0), 1.95, "fade", 0.35)
+    a.mark(text(s, 1.72, 6.61, 6.2, 0.24, "github.com/dxxjudges/AI-NoldOJ-Match",
+                size=8.6, color="C7D3E6", font=FONT_NUM), 2.0, "fade", 0.4)
+    a.mark(text(s, 8.4, 6.65, 4.2, 0.2, "THANKS  FOR  WATCHING", size=7.5, color=CYAN,
+                bold=True, align="right", spacing=2.4), 2.05, "fade", 0.4)
     finish_page(s, a)
 
 

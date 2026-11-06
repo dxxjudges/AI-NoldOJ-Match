@@ -3248,7 +3248,7 @@
       "shape": "A11_20",
       "at": 1.85,
       "effect": "fade",
-      "dur": 0.45,
+      "dur": 0.35,
       "direction": null,
       "trigger": null
     },
@@ -3263,6 +3263,30 @@
     {
       "shape": "A11_22",
       "at": 1.95,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_23",
+      "at": 1.95,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_24",
+      "at": 2.0,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_25",
+      "at": 2.05,
       "effect": "fade",
       "dur": 0.4,
       "direction": null,

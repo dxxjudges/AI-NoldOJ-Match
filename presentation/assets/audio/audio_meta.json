@@ -2,7 +2,7 @@
   "sample_rate": 22050,
   "pre": 0.45,
   "post": 1.05,
-  "total": 237.09,
+  "total": 242.784,
   "soundtrack": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\soundtrack.wav",
   "slides": [
     {
@@ -109,8 +109,8 @@
       "slide": 11,
       "title": "代码是答卷，工程化是分数",
       "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide11.wav",
-      "duration": 17.316,
-      "narration": 15.816,
+      "duration": 23.01,
+      "narration": 21.51,
       "offset": 219.573,
       "pre": 0.45,
       "post": 1.05
