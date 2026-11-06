@@ -1,0 +1,3272 @@
+{
+  "1": [
+    {
+      "shape": "A01_01",
+      "at": 0.15,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_02",
+      "at": 0.28,
+      "effect": "rise",
+      "dur": 0.65,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_03",
+      "at": 0.46,
+      "effect": "rise",
+      "dur": 0.6,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_04",
+      "at": 0.68,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A01_05",
+      "at": 0.8,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_06",
+      "at": 1.0,
+      "effect": "fade",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_07",
+      "at": 1.45,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_08",
+      "at": 1.5,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_09",
+      "at": 1.54,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_10",
+      "at": 1.59,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_11",
+      "at": 1.42,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_12",
+      "at": 1.63,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_13",
+      "at": 1.68,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_14",
+      "at": 1.42,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_15",
+      "at": 1.72,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_16",
+      "at": 1.77,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_17",
+      "at": 1.42,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_18",
+      "at": 0.85,
+      "effect": "rise",
+      "dur": 0.65,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_19",
+      "at": 1.0,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_20",
+      "at": 1.05,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_21",
+      "at": 1.15,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_22",
+      "at": 1.2,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_23",
+      "at": 1.24,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_24",
+      "at": 1.3,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_25",
+      "at": 1.3,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_26",
+      "at": 1.38,
+      "effect": "wipe",
+      "dur": 0.55,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A01_27",
+      "at": 1.3,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_28",
+      "at": 1.33,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_29",
+      "at": 1.38,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_30",
+      "at": 1.42,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_31",
+      "at": 1.48,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_32",
+      "at": 1.48,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_33",
+      "at": 1.56,
+      "effect": "wipe",
+      "dur": 0.55,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A01_34",
+      "at": 1.3,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_35",
+      "at": 1.51,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_36",
+      "at": 1.56,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_37",
+      "at": 1.6,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_38",
+      "at": 1.66,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_39",
+      "at": 1.66,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A01_40",
+      "at": 1.74,
+      "effect": "wipe",
+      "dur": 0.55,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A01_41",
+      "at": 2.35,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "2": [
+    {
+      "shape": "A02_01",
+      "at": 0.32,
+      "effect": "rise",
+      "dur": 0.52,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_02",
+      "at": 0.4,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_03",
+      "at": 0.44,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_04",
+      "at": 0.48,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_05",
+      "at": 0.46,
+      "effect": "rise",
+      "dur": 0.52,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_06",
+      "at": 0.54,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_07",
+      "at": 0.58,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_08",
+      "at": 0.62,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_09",
+      "at": 0.6,
+      "effect": "rise",
+      "dur": 0.52,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_10",
+      "at": 0.68,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_11",
+      "at": 0.72,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_12",
+      "at": 0.76,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_13",
+      "at": 0.74,
+      "effect": "rise",
+      "dur": 0.52,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_14",
+      "at": 0.82,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_15",
+      "at": 0.86,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_16",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_17",
+      "at": 0.55,
+      "effect": "wipe",
+      "dur": 0.7,
+      "direction": "down",
+      "trigger": null
+    },
+    {
+      "shape": "A02_18",
+      "at": 0.75,
+      "effect": "zoom",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_19",
+      "at": 0.8,
+      "effect": "rise",
+      "dur": 0.48,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_20",
+      "at": 0.88,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_21",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_22",
+      "at": 0.94,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_23",
+      "at": 1.0,
+      "effect": "zoom",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_24",
+      "at": 1.05,
+      "effect": "rise",
+      "dur": 0.48,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_25",
+      "at": 1.13,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_26",
+      "at": 1.15,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_27",
+      "at": 1.19,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_28",
+      "at": 1.25,
+      "effect": "zoom",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_29",
+      "at": 1.3,
+      "effect": "rise",
+      "dur": 0.48,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_30",
+      "at": 1.38,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_31",
+      "at": 1.4,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_32",
+      "at": 1.44,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_33",
+      "at": 1.5,
+      "effect": "zoom",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_34",
+      "at": 1.55,
+      "effect": "rise",
+      "dur": 0.48,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_35",
+      "at": 1.63,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_36",
+      "at": 1.65,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_37",
+      "at": 1.69,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A02_38",
+      "at": 2.4,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "3": [
+    {
+      "shape": "A03_01",
+      "at": 0.3,
+      "effect": "rise",
+      "dur": 0.6,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_02",
+      "at": 0.36,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A03_03",
+      "at": 0.42,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_04",
+      "at": 0.46,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_05",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_06",
+      "at": 0.55,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_07",
+      "at": 0.58,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_08",
+      "at": 0.65,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_09",
+      "at": 0.68,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_10",
+      "at": 0.69,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_11",
+      "at": 0.72,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_12",
+      "at": 0.73,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_13",
+      "at": 0.76,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_14",
+      "at": 0.95,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_15",
+      "at": 0.48,
+      "effect": "rise",
+      "dur": 0.6,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_16",
+      "at": 0.54,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A03_17",
+      "at": 0.6,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_18",
+      "at": 0.64,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_19",
+      "at": 0.68,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_20",
+      "at": 0.73,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_21",
+      "at": 0.76,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_22",
+      "at": 0.83,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_23",
+      "at": 0.86,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_24",
+      "at": 0.87,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_25",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_26",
+      "at": 0.91,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_27",
+      "at": 0.94,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_28",
+      "at": 1.13,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_29",
+      "at": 0.66,
+      "effect": "rise",
+      "dur": 0.6,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_30",
+      "at": 0.72,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A03_31",
+      "at": 0.78,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_32",
+      "at": 0.82,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_33",
+      "at": 0.86,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_34",
+      "at": 0.91,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_35",
+      "at": 0.94,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_36",
+      "at": 1.01,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_37",
+      "at": 1.04,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_38",
+      "at": 1.05,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_39",
+      "at": 1.08,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_40",
+      "at": 1.09,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_41",
+      "at": 1.12,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_42",
+      "at": 1.31,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A03_43",
+      "at": 1.55,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "4": [
+    {
+      "shape": "A04_01",
+      "at": 0.25,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_02",
+      "at": 0.35,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_03",
+      "at": 0.35,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_04",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_05",
+      "at": 0.55,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_06",
+      "at": 0.6,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_07",
+      "at": 0.62,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_08",
+      "at": 0.72,
+      "effect": "wipe",
+      "dur": 0.7,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A04_09",
+      "at": 1.1,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_10",
+      "at": 1.12,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_11",
+      "at": 1.1,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_12",
+      "at": 1.05,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_13",
+      "at": 1.1,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_14",
+      "at": 1.15,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_15",
+      "at": 1.17,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_16",
+      "at": 1.27,
+      "effect": "wipe",
+      "dur": 0.7,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A04_17",
+      "at": 1.65,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_18",
+      "at": 1.67,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_19",
+      "at": 1.65,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_20",
+      "at": 1.6,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_21",
+      "at": 1.65,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_22",
+      "at": 1.7,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_23",
+      "at": 1.72,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_24",
+      "at": 1.82,
+      "effect": "wipe",
+      "dur": 0.7,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A04_25",
+      "at": 2.2,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_26",
+      "at": 2.22,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_27",
+      "at": 2.35,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A04_28",
+      "at": 2.4,
+      "effect": "wipe",
+      "dur": 0.4,
+      "direction": "down",
+      "trigger": null
+    },
+    {
+      "shape": "A04_29",
+      "at": 2.45,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "5": [
+    {
+      "shape": "A05_01",
+      "at": 0.22,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_02",
+      "at": 0.32,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_03",
+      "at": 0.34,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_04",
+      "at": 0.42,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_05",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_06",
+      "at": 0.4,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_07",
+      "at": 0.38,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_08",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_09",
+      "at": 0.55,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_10",
+      "at": 0.57,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_11",
+      "at": 0.6,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_12",
+      "at": 0.625,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_13",
+      "at": 0.65,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_14",
+      "at": 0.67,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_15",
+      "at": 0.67,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_16",
+      "at": 0.69,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_17",
+      "at": 0.72,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_18",
+      "at": 0.745,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_19",
+      "at": 0.77,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_20",
+      "at": 0.74,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_21",
+      "at": 0.79,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_22",
+      "at": 0.81,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_23",
+      "at": 0.84,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_24",
+      "at": 0.865,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_25",
+      "at": 0.89,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_26",
+      "at": 0.91,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_27",
+      "at": 0.93,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_28",
+      "at": 0.96,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_29",
+      "at": 0.985,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_30",
+      "at": 1.01,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_31",
+      "at": 0.98,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_32",
+      "at": 1.03,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_33",
+      "at": 1.05,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_34",
+      "at": 1.08,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_35",
+      "at": 1.105,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_36",
+      "at": 1.13,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_37",
+      "at": 1.15,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_38",
+      "at": 1.17,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_39",
+      "at": 1.2,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_40",
+      "at": 1.225,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_41",
+      "at": 1.25,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_42",
+      "at": 1.22,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_43",
+      "at": 1.27,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_44",
+      "at": 1.29,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_45",
+      "at": 1.32,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_46",
+      "at": 1.345,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_47",
+      "at": 1.37,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_48",
+      "at": 1.39,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_49",
+      "at": 1.41,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_50",
+      "at": 1.44,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_51",
+      "at": 1.465,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_52",
+      "at": 1.49,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A05_53",
+      "at": 1.9,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "6": [
+    {
+      "shape": "A06_01",
+      "at": 0.25,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_02",
+      "at": 0.35,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_03",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_04",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_05",
+      "at": 0.54,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_06",
+      "at": 0.58,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_07",
+      "at": 0.55,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_08",
+      "at": 0.62,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_09",
+      "at": 0.62,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_10",
+      "at": 0.66,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_11",
+      "at": 0.7,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_12",
+      "at": 0.67,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_13",
+      "at": 0.74,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_14",
+      "at": 0.74,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_15",
+      "at": 0.78,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_16",
+      "at": 0.82,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_17",
+      "at": 1.45,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_18",
+      "at": 1.55,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_19",
+      "at": 0.3,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_20",
+      "at": 0.4,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_21",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_22",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.25,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_23",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.25,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_24",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.25,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_25",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.25,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_26",
+      "at": 0.7,
+      "effect": "rise",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_27",
+      "at": 0.75,
+      "effect": "wipe",
+      "dur": 0.8,
+      "direction": "up",
+      "trigger": null
+    },
+    {
+      "shape": "A06_28",
+      "at": 0.78,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_29",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_30",
+      "at": 0.95,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_31",
+      "at": 0.98,
+      "effect": "rise",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_32",
+      "at": 1.03,
+      "effect": "wipe",
+      "dur": 0.8,
+      "direction": "up",
+      "trigger": null
+    },
+    {
+      "shape": "A06_33",
+      "at": 1.06,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_34",
+      "at": 1.18,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_35",
+      "at": 1.23,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_36",
+      "at": 1.26,
+      "effect": "rise",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_37",
+      "at": 1.31,
+      "effect": "wipe",
+      "dur": 0.8,
+      "direction": "up",
+      "trigger": null
+    },
+    {
+      "shape": "A06_38",
+      "at": 1.34,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_39",
+      "at": 1.46,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_40",
+      "at": 1.51,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A06_41",
+      "at": 1.7,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "7": [
+    {
+      "shape": "A07_01",
+      "at": 0.3,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_02",
+      "at": 0.22,
+      "effect": "fade",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_03",
+      "at": 0.32,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_04",
+      "at": 0.34,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_05",
+      "at": 0.42,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_06",
+      "at": 0.5,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_07",
+      "at": 0.38,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_08",
+      "at": 0.55,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_09",
+      "at": 0.58,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_10",
+      "at": 0.62,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_11",
+      "at": 0.64,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_12",
+      "at": 0.66,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_13",
+      "at": 0.69,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_14",
+      "at": 0.72,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_15",
+      "at": 0.76,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_16",
+      "at": 0.78,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_17",
+      "at": 0.8,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_18",
+      "at": 0.83,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_19",
+      "at": 0.86,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_20",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_21",
+      "at": 0.92,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_22",
+      "at": 0.94,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_23",
+      "at": 0.97,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_24",
+      "at": 0.97,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_25",
+      "at": 1.0,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_26",
+      "at": 1.04,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_27",
+      "at": 1.06,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_28",
+      "at": 1.08,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_29",
+      "at": 1.27,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_30",
+      "at": 1.15,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_31",
+      "at": 1.22,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_32",
+      "at": 1.26,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_33",
+      "at": 1.27,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_34",
+      "at": 1.34,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_35",
+      "at": 1.38,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_36",
+      "at": 1.39,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_37",
+      "at": 1.46,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_38",
+      "at": 1.5,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A07_39",
+      "at": 1.9,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "8": [
+    {
+      "shape": "A08_01",
+      "at": 1.75,
+      "effect": "fade",
+      "dur": 0.7,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_02",
+      "at": 0.9,
+      "effect": "wipe",
+      "dur": 0.6,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A08_03",
+      "at": 0.35,
+      "effect": "rise",
+      "dur": 0.75,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_04",
+      "at": 0.4,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A08_05",
+      "at": 0.43,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_06",
+      "at": 0.47,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_07",
+      "at": 0.53,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_08",
+      "at": 0.6,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_09",
+      "at": 1.05,
+      "effect": "rise",
+      "dur": 0.75,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_10",
+      "at": 1.1,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A08_11",
+      "at": 1.13,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_12",
+      "at": 1.17,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_13",
+      "at": 1.23,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_14",
+      "at": 1.25,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_15",
+      "at": 1.3,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_16",
+      "at": 1.8,
+      "effect": "rise",
+      "dur": 0.75,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_17",
+      "at": 1.85,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A08_18",
+      "at": 1.88,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_19",
+      "at": 1.92,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_20",
+      "at": 1.98,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_21",
+      "at": 2.0,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_22",
+      "at": 2.04,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_23",
+      "at": 2.06,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_24",
+      "at": 2.05,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_25",
+      "at": 2.45,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_26",
+      "at": 2.0,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A08_27",
+      "at": 2.0,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "9": [
+    {
+      "shape": "A09_01",
+      "at": 0.3,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_02",
+      "at": 0.35,
+      "effect": "wipe",
+      "dur": 0.45,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A09_03",
+      "at": 0.4,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_04",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_05",
+      "at": 0.5,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_06",
+      "at": 0.55,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_07",
+      "at": 0.68,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_08",
+      "at": 0.7,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_09",
+      "at": 0.78,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_10",
+      "at": 0.8,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_11",
+      "at": 0.88,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_12",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_13",
+      "at": 1.15,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_14",
+      "at": 0.48,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_15",
+      "at": 0.53,
+      "effect": "wipe",
+      "dur": 0.45,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A09_16",
+      "at": 0.58,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_17",
+      "at": 0.63,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_18",
+      "at": 0.68,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_19",
+      "at": 0.73,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_20",
+      "at": 0.86,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_21",
+      "at": 0.88,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_22",
+      "at": 0.96,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_23",
+      "at": 0.98,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_24",
+      "at": 1.06,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_25",
+      "at": 1.08,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_26",
+      "at": 1.33,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_27",
+      "at": 0.66,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_28",
+      "at": 0.71,
+      "effect": "wipe",
+      "dur": 0.45,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A09_29",
+      "at": 0.76,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_30",
+      "at": 0.81,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_31",
+      "at": 0.86,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_32",
+      "at": 0.91,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_33",
+      "at": 1.04,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_34",
+      "at": 1.06,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_35",
+      "at": 1.14,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_36",
+      "at": 1.16,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_37",
+      "at": 1.24,
+      "effect": "zoom",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_38",
+      "at": 1.26,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_39",
+      "at": 1.51,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A09_40",
+      "at": 1.9,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "10": [
+    {
+      "shape": "A10_01",
+      "at": 0.35,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_02",
+      "at": 0.42,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_03",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_04",
+      "at": 0.55,
+      "effect": "wipe",
+      "dur": 0.4,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A10_05",
+      "at": 0.58,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_06",
+      "at": 0.6,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_07",
+      "at": 0.5,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_08",
+      "at": 0.6,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_09",
+      "at": 0.65,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_10",
+      "at": 0.7,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_11",
+      "at": 0.65,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_12",
+      "at": 0.72,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_13",
+      "at": 0.75,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_14",
+      "at": 0.85,
+      "effect": "wipe",
+      "dur": 0.4,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A10_15",
+      "at": 0.88,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_16",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_17",
+      "at": 0.8,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_18",
+      "at": 0.9,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_19",
+      "at": 0.95,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_20",
+      "at": 1.0,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_21",
+      "at": 0.95,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_22",
+      "at": 1.02,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_23",
+      "at": 1.05,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_24",
+      "at": 1.15,
+      "effect": "wipe",
+      "dur": 0.4,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A10_25",
+      "at": 1.18,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_26",
+      "at": 1.2,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_27",
+      "at": 1.1,
+      "effect": "rise",
+      "dur": 0.5,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_28",
+      "at": 1.2,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_29",
+      "at": 1.25,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_30",
+      "at": 1.3,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_31",
+      "at": 1.5,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_32",
+      "at": 1.55,
+      "effect": "zoom",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A10_33",
+      "at": 1.62,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    }
+  ],
+  "11": [
+    {
+      "shape": "A11_01",
+      "at": 0.35,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_02",
+      "at": 0.45,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_03",
+      "at": 0.5,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_04",
+      "at": 0.55,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_05",
+      "at": 0.65,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_06",
+      "at": 0.53,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_07",
+      "at": 0.63,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_08",
+      "at": 0.68,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_09",
+      "at": 0.73,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_10",
+      "at": 0.83,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_11",
+      "at": 0.71,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_12",
+      "at": 0.81,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_13",
+      "at": 0.86,
+      "effect": "rise",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_14",
+      "at": 0.91,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_15",
+      "at": 1.01,
+      "effect": "fade",
+      "dur": 0.35,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_16",
+      "at": 1.2,
+      "effect": "wipe",
+      "dur": 0.5,
+      "direction": "right",
+      "trigger": null
+    },
+    {
+      "shape": "A11_17",
+      "at": 1.3,
+      "effect": "rise",
+      "dur": 0.55,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_18",
+      "at": 1.55,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_19",
+      "at": 1.75,
+      "effect": "fade",
+      "dur": 0.3,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_20",
+      "at": 1.85,
+      "effect": "fade",
+      "dur": 0.45,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_21",
+      "at": 1.9,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    },
+    {
+      "shape": "A11_22",
+      "at": 1.95,
+      "effect": "fade",
+      "dur": 0.4,
+      "direction": null,
+      "trigger": null
+    }
+  ]
+}

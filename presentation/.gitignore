@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+
+# Regenerable audio intermediates (the PPTX/PPSX already embed the final mix)
+assets/audio/*.wav
+assets/audio/narration/
+
+# Third-party piper voice model (~63 MB) — see README for the download URL
+assets/voice/

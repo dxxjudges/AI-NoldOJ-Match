@@ -1,0 +1,119 @@
+{
+  "sample_rate": 22050,
+  "pre": 0.45,
+  "post": 1.05,
+  "total": 237.09,
+  "soundtrack": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\soundtrack.wav",
+  "slides": [
+    {
+      "slide": 1,
+      "title": "NoldOJ 同题开发评测",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide01.wav",
+      "duration": 15.329,
+      "narration": 13.829,
+      "offset": 0.0,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 2,
+      "title": "一份需求，三种答卷",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide02.wav",
+      "duration": 22.119,
+      "narration": 20.619,
+      "offset": 15.329,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 3,
+      "title": "三种工程哲学，三份完整答卷",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide03.wav",
+      "duration": 21.595,
+      "narration": 20.095,
+      "offset": 37.448,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 4,
+      "title": "28.0 · 26.3 · 23.5，差距写在短板上",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide04.wav",
+      "duration": 22.215,
+      "narration": 20.715,
+      "offset": 59.043,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 5,
+      "title": "覆盖是广度，实现是深度",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide05.wav",
+      "duration": 21.578,
+      "narration": 20.078,
+      "offset": 81.258,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 6,
+      "title": "工程化，决定交付的下限",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide06.wav",
+      "duration": 25.3,
+      "narration": 23.8,
+      "offset": 102.836,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 7,
+      "title": "能不能十分钟跑起来？",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide07.wav",
+      "duration": 21.346,
+      "narration": 19.846,
+      "offset": 128.137,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 8,
+      "title": "冠军没有悬念，亚军更有看点",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide08.wav",
+      "duration": 21.462,
+      "narration": 19.962,
+      "offset": 149.483,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 9,
+      "title": "三种值得记住的能力",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide09.wav",
+      "duration": 24.233,
+      "narration": 22.733,
+      "offset": 170.945,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 10,
+      "title": "没有全能冠军，只有场景最优解",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide10.wav",
+      "duration": 24.396,
+      "narration": 22.896,
+      "offset": 195.177,
+      "pre": 0.45,
+      "post": 1.05
+    },
+    {
+      "slide": 11,
+      "title": "代码是答卷，工程化是分数",
+      "audio": "F:\\AI-OJ-Match\\presentation\\assets\\audio\\slide11.wav",
+      "duration": 17.316,
+      "narration": 15.816,
+      "offset": 219.573,
+      "pre": 0.45,
+      "post": 1.05
+    }
+  ]
+}
