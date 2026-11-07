@@ -10,6 +10,7 @@
 | `output/NoldOJ_Evaluation_Report.pptx` | 可编辑源文件，动画/音频/转场均已内置 |
 | `output/preview/slide01.png` … `slide11.png` | 每页 1600×900 预览图 |
 | `output/script.md` | 11 页完整配音脚本 |
+| `output/video_meta.md` | 视频标题、简介、标签与章节时间轴（可直接复制发布） |
 | `output/animation_spec.json` | 每个动画对象的开始时间/时长/效果 |
 
 音频已全部 **嵌入** PPT，拷贝单个 `.ppsx` 即可播放，不需要附带 wav 文件。
@@ -22,7 +23,7 @@
 - 建议使用 PowerPoint 2016 及以上 / Microsoft 365；WPS 对嵌入媒体与动画时间轴支持不完整。
 - 字体使用 `Microsoft YaHei UI` 与 `Bahnschrift`（Windows 10/11 自带）。
 
-## 页面结构（约 4 分 03 秒）
+## 页面结构（约 4 分 12 秒）
 
 1. 封面：NoldOJ 同题开发评测
 2. 评测方法：一份需求，三种答卷
