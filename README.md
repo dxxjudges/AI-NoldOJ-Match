@@ -2,6 +2,8 @@
 
 > 同一道命题（[NoldOJ 需求文档](https://github.com/dxxjudges/AI-NoldOJ-Match/blob/main/NoldOJ_Requirements_Document.md)），分别由 **DeepSeek-V4.1-Flash**、**GLM-5.3-Flash**、**MiMo-V2.6-Flash** 三款大模型独立完成完整工程实现。
 > 本仓库记录横向评测结果：**功能完整性 / bug 数量及严重等级 / 用户体验** 三个维度。
+>
+> 📺 视频解说（4 分 12 秒）：[三个大模型同写一套 OJ，然后给它们打了分](https://www.bilibili.com/video/BV1pB476sEjv/)
 
 ## 评测方法
 
@@ -99,6 +101,12 @@
 - 要**快速铺功能、可接受后期补全** → 选 **MiMo-V2.6**
 
 ---
+
+## 相关链接
+
+- 视频解说（B 站，4 分 12 秒）：https://www.bilibili.com/video/BV1pB476sEjv/
+- 在线评测站点：https://anm.dxxj.de5.net
+- 自动演示 PPT：[presentation/](presentation/)
 
 ## License
 

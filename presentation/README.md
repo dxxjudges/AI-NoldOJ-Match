@@ -11,6 +11,7 @@
 | `output/preview/slide01.png` … `slide11.png` | 每页 1600×900 预览图 |
 | `output/script.md` | 11 页完整配音脚本 |
 | `output/video_meta.md` | 视频标题、简介、标签与章节时间轴（可直接复制发布） |
+| 视频成片（B 站） | [三个大模型同写一套 OJ，然后给它们打了分](https://www.bilibili.com/video/BV1pB476sEjv/) · 4 分 12 秒 |
 | `output/animation_spec.json` | 每个动画对象的开始时间/时长/效果 |
 
 音频已全部 **嵌入** PPT，拷贝单个 `.ppsx` 即可播放，不需要附带 wav 文件。

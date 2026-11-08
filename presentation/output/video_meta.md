@@ -8,6 +8,8 @@
 
 我让三个大模型写了同一个 OJ 系统，然后给它们打了分
 
+发布地址：https://www.bilibili.com/video/BV1pB476sEjv/
+
 ## 二、备选标题
 
 三份 AI 答卷，只有一份能上线

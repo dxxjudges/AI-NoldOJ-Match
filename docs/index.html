@@ -127,6 +127,10 @@
   .stat span { font-size: 13px; color: var(--text-faint); }
   .stat b.c1 { color: var(--accent); } .stat b.c2 { color: var(--green); }
   .stat b.c3 { color: var(--amber); } .stat b.c4 { color: var(--accent-2); }
+  @media (max-width: 640px) {
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-badge { white-space: normal; max-width: 100%; }
+  }
 
   /* ── Sections ─────────────────────────── */
   section { padding: 84px 0; }
@@ -216,6 +220,45 @@
     color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 14px;
   }
 
+  /* Video */
+  .video-card {
+    display: flex; align-items: center; gap: 26px;
+    background: linear-gradient(120deg, rgba(99,102,241,.16), rgba(34,211,238,.07));
+    border: 1px solid var(--card-border); border-radius: 20px;
+    padding: 24px 30px;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .video-card:hover { transform: translateY(-3px); border-color: rgba(34,211,238,.5); box-shadow: var(--shadow); }
+  .video-thumb {
+    position: relative; flex: none; width: 190px; aspect-ratio: 16 / 9; border-radius: 12px;
+    background:
+      linear-gradient(rgba(11,16,32,.25), rgba(11,16,32,.6)),
+      url("assets/video-cover.jpg") center / cover no-repeat;
+    border: 1px solid rgba(255,255,255,.12);
+    display: grid; place-items: center;
+  }
+  .video-play {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #fff; color: #0b1020; display: grid; place-items: center;
+    font-size: 20px; padding-left: 4px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .video-dur {
+    position: absolute; right: 8px; bottom: 8px;
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: rgba(0,0,0,.65); padding: 2px 7px; border-radius: 6px;
+  }
+  .video-info { flex: 1; min-width: 0; }
+  .video-info .tag { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--accent-2); text-transform: uppercase; }
+  .video-info h3 { font-size: 21px; font-weight: 700; margin: 6px 0; }
+  .video-info p { font-size: 14px; color: var(--text-dim); }
+  .video-go { flex: none; color: var(--accent-2); font-weight: 600; font-size: 14px; white-space: nowrap; }
+  @media (max-width: 720px) {
+    .video-card { flex-direction: column; align-items: stretch; padding: 20px; gap: 18px; }
+    .video-thumb { width: 100%; }
+    .video-go { text-align: right; }
+  }
+
   /* FAQ */
   details { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 12px; }
   details summary { cursor: pointer; font-weight: 600; font-size: 15px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
@@ -242,6 +285,7 @@
       <a href="#entries">参赛项目</a>
       <a href="#compare">能力对比</a>
       <a href="#score">评分榜</a>
+      <a href="#video">视频解说</a>
       <a href="#advice">选型建议</a>
       <a href="#faq">常见问题</a>
       <a href="https://github.com/dxxjudges/AI-NoldOJ-Match" target="_blank" rel="noopener">GitHub 仓库</a>
@@ -258,6 +302,9 @@
       <a class="btn btn-primary" href="#score">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         查看评分榜
+      </a>
+      <a class="btn btn-ghost" href="https://www.bilibili.com/video/BV1pB476sEjv/" target="_blank" rel="noopener">视频解说
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </a>
       <a class="btn btn-ghost" href="#entries">参赛项目</a>
       <a class="btn btn-ghost" href="#advice">选型建议</a>
@@ -322,6 +369,23 @@
         </ul>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="video">
+  <div class="wrap">
+    <a class="video-card reveal" href="https://www.bilibili.com/video/BV1pB476sEjv/" target="_blank" rel="noopener">
+      <div class="video-thumb">
+        <span class="video-play" aria-hidden="true">▶</span>
+        <span class="video-dur">4:12</span>
+      </div>
+      <div class="video-info">
+        <span class="tag">Video</span>
+        <h3>我让三个大模型写了同一个 OJ 系统，然后给它们打了分</h3>
+        <p>中文配音 · 11 页 · 409 个动画，从评分到选型一次看完</p>
+      </div>
+      <span class="video-go">B 站观看 →</span>
+    </a>
   </div>
 </section>
 
